@@ -62,16 +62,16 @@ class Button():
     def __init__(self, 
                  text: str, 
                  font_size: int, 
-                 color_text: tuple, 
+                 font_color: tuple, 
                  color_button: tuple, 
                  radius=20, 
                  font=None):
         self.text = text
         self.font = pygame.font.SysFont(font, font_size) if font else pygame.font.SysFont(None, font_size)
-        self.text_surface = self.font.render(text, True, color_text)
+        self.text_surface = self.font.render(text, True, font_color)
         self.set_button()
         self.color_button = color_button
-        self.color_text = color_text
+        self.color_text = font_color
         self.radius = radius
         # สถานะทั้งหมดได้แก่ "normal", "hover", "pressed"
         self.state = "normal"  
