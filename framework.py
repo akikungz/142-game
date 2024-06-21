@@ -94,9 +94,9 @@ class Button():
         screen_draw.blit(self.font.render(self.text, True, text_color), self.text_rect)
 
     def set_button(self, 
-                   width_button: int,
-                   height_button: int, 
-                   x: int, y: int):
+                   width_button=1,
+                   height_button=1,
+                   x=1, y=1,):
         self.text_rect = self.text_surface.get_rect(center=(x+(width_button/2), y+(height_button/2)))
         self.button = pygame.Rect(x, y, width_button, height_button)
     
@@ -143,3 +143,77 @@ class Text():
         else:
             text_rect = text_surface.get_rect(topleft=(x, y))
         screen_draw.blit(text_surface, text_rect)
+
+
+class Dropdown():
+    def __init__(self, 
+                 options: list, 
+                 font_size: int,
+                 font_color: tuple, 
+                 color_dropdown: tuple, 
+                 font=None):
+        self.__options = options
+        self.__font = pygame.font.SysFont(font, font_size) if font else pygame.font.SysFont(None, font_size)
+        self.__font_color = font_color
+        self.__color_dropdown = color_dropdown
+        self.__active = False
+        self.selected_option = options[0]
+        # สถานะทั้งหมดได้แก่ "normal", "hover"
+        self.__hover_option = "normal."
+
+    def show(self,
+             screen_draw: pygame.Surface, 
+             width: int, 
+             height: int, 
+             x: int, y: int):
+        self.rect = pygame.Rect(x, y, width, height)
+        pygame.draw.rect(screen_draw, self.__color_dropdown, self.rect)
+        text_surface = self.__font.render(self.selected_option if self.selected_option else self.__options[0], True, self.__font_color)
+        text_rect = text_surface.get_rect(center=(x+(width/2)-10, y+(height/2)))
+        screen_draw.blit(text_surface, text_rect)
+
+        # วาดลูกศรชี้ลง (หรือชี้ขึ้นถ้า Dropdown เปิดอยู่)
+        arrow_direction = 1 if self.__active else -1
+        arrow_points = [
+            (self.rect.right - 20, self.rect.centery - 5 * arrow_direction),
+            (self.rect.right - 10, self.rect.centery + 5 * arrow_direction),
+            (self.rect.right - 30, self.rect.centery + 5 * arrow_direction)
+        ]
+        pygame.draw.polygon(screen_draw, self.__font_color, arrow_points)
+
+        if self.__active:
+            for i, option in enumerate(self.__options):
+                rect = pygame.Rect(self.rect.x, self.rect.y + (i+1) * self.rect.height, self.rect.width, self.rect.height)
+                if self.__hover_option == i:
+                    color_dropdown = [min(255, c + 20) for c in self.__color_dropdown] # ทำให้สว่างขึ้น
+                else:
+                    color_dropdown = [max(0, c - 55) for c in self.__color_dropdown] # ทำให้มืดลง
+                pygame.draw.rect(screen_draw, color_dropdown, rect)
+                text_surface = self.__font.render(option, True, self.__font_color)
+                text_rect = text_surface.get_rect(center=(rect.x+(width/2), rect.y+(height/2)))
+                screen_draw.blit(text_surface, text_rect)
+
+    def handle_event(self, event) -> bool:
+        if event.type == pygame.MOUSEMOTION and self.__active:
+            for i, option in enumerate(self.__options):
+                rect = pygame.Rect(self.rect.x, self.rect.y + (i+1) * self.rect.height, self.rect.width, self.rect.height)
+                if rect.collidepoint(event.pos):
+                    self.__hover_option = i
+                    break
+                else:
+                    self.__hover_option = -1
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.__active = not self.__active
+            elif self.__active:
+                for i, option in enumerate(self.__options):
+                    rect = pygame.Rect(self.rect.x, self.rect.y + (i+1) * self.rect.height, self.rect.width, self.rect.height)
+                    if rect.collidepoint(event.pos):
+                        self.selected_option = option
+                        self.__active = False
+                        # ส่งคืนค่า True เมื่อมีการเลือกตัวเลือก
+                        return True
+                    else:
+                        self.__active = False
+        # ส่งคืนค่า False เมื่อไม่มีการเลือกตัวเลือกใด ๆ
+        return False
