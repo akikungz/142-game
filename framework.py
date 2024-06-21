@@ -3,7 +3,7 @@ from math import ceil
 
 
 class Screen():
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int):
         # กำหนดการแบ่งหน้าจอ
         self.MAX_X = x
         self.MAX_Y = y
@@ -18,7 +18,7 @@ class Screen():
         # แบ่งหน้าจออกเป็น grid
         self.__set_axis()
 
-    def set_screen(self, width, height):
+    def set_screen(self, width: int, height: int):
         # ตั้งค่าโหมดการแสดงผลเป็นค่าที่กำหนด
         self.window = pygame.display.set_mode((width, height))
         # ตรวจจับความละเอียดหน้าจอปัจจุบัน
@@ -61,13 +61,13 @@ class Screen():
 class Button():
     def __init__(self, 
                  text: str, 
-                 size_text: int, 
+                 font_size: int, 
                  color_text: tuple, 
                  color_button: tuple, 
                  radius=20, 
                  font=None):
         self.text = text
-        self.font = pygame.font.SysFont(font, size_text) if font else pygame.font.SysFont(None, size_text)
+        self.font = pygame.font.SysFont(font, font_size) if font else pygame.font.SysFont(None, font_size)
         self.text_surface = self.font.render(text, True, color_text)
         self.set_button()
         self.color_button = color_button
