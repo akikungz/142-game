@@ -22,21 +22,28 @@ DARK_BLUE = (0, 0, 139)
 class Variable():
     def __init__(self):
         self.clock = pygame.time.Clock()
+        # ตัวแปรข้อความ
+        self.text_normal = fw.Text('', 30, BLACK)
         # ตัวแปรของปุ่ม
         self.btnPlay = fw.Button('play', 20, WHITE, DARK_BLUE)
         self.btnSetting = fw.Button('setting', 20, WHITE, DARK_BLUE)
         self.btnExit = fw.Button('exit', 20, WHITE, RED)
-        self.btnFullscreen = fw.Button('Fullscreen', 20, WHITE, DARK_BLUE)
-        self.btn1080P = fw.Button('1920x1080', 20, WHITE, DARK_BLUE)
-        self.btn720P = fw.Button('1280x720', 20, WHITE, DARK_BLUE)
-        self.btn480P = fw.Button('854x480', 20, WHITE, DARK_BLUE)
-        self.btn360P = fw.Button('640x360', 20, WHITE, DARK_BLUE)
+        self.btnPrevious = fw.Button('<', 20, WHITE, DARK_BLUE)
+        self.btnNext = fw.Button('>', 20, WHITE, DARK_BLUE)
         # set ค่าเริ่มต้น
         self.set_start()
 
     def set_start(self):
         pass
 
+
+def set_screen_size(screen, screen_size, key_btn):
+    if screen_size[key_btn] == 'Full Screen':
+        screen.set_fullscreen_mode()
+    else:
+        w = int(screen_size[key_btn].split('x')[0])
+        h = int(screen_size[key_btn].split('x')[1])
+        screen.set_screen(w, h)
 
 # global variable
 screen = fw.Screen(640, 360)
@@ -47,7 +54,7 @@ while True:
     # ตัวแปรสำหรับเข้าแต่ละหน้า
     page_play = False
     page_setting = False
-    # ตัวแปลอีเว้น
+    # ตัวแปรอีเว้น
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
@@ -73,7 +80,9 @@ while True:
     pygame.display.flip()
     var.clock.tick(30)
 
+    key_btn = 0
     while page_setting:
+        screen_size = ['Full Screen', '1920x1080', '1280x720', '854x480', '640x360']
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
@@ -85,23 +94,22 @@ while True:
                     sys.exit()
             elif var.btnExit.click(event):
                 page_setting = False
-            elif var.btnFullscreen.click(event):
-                screen.set_fullscreen_mode()
-            elif var.btn1080P.click(event):
-                screen.set_screen(1920, 1080)
-            elif var.btn720P.click(event):
-                screen.set_screen(1280, 720)
-            elif var.btn480P.click(event):
-                screen.set_screen(854, 480)
-            elif var.btn360P.click(event):
-                screen.set_screen(640, 360)
-
+            elif var.btnPrevious.click(event):
+                key_btn -= 1
+                if key_btn < 0:
+                    key_btn = len(screen_size) - 1
+                set_screen_size(screen, screen_size, key_btn)
+            elif var.btnNext.click(event):
+                key_btn += 1
+                if key_btn > len(screen_size) - 1:
+                    key_btn = 0
+                set_screen_size(screen, screen_size, key_btn)
+        
         screen.window.fill(WHITE)
-        var.btnFullscreen.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(100))
-        var.btn1080P.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(130))
-        var.btn720P.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(160))
-        var.btn480P.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(190))
-        var.btn360P.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(220))
+        var.text_normal.show(screen.window, screen.pack_x(200), screen.pack_y(135), 'screen size')
+        var.text_normal.show(screen.window, screen.pack_x(315), screen.pack_y(135), f'{screen_size[key_btn]}', center_mode=True)
+        var.btnPrevious.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(260), screen.pack_y(130))
+        var.btnNext.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(350), screen.pack_y(130))
         var.btnExit.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(520), screen.pack_y(10))
 
         pygame.display.flip()

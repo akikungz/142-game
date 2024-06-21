@@ -111,3 +111,32 @@ class Button():
             if self.state == "pressed":
                 self.state = "normal"
         return False
+
+
+class Text():
+    def __init__(self, 
+                 text_default: str, 
+                 size_text: int, 
+                 color_text: tuple, 
+                 font=None):
+        # สร้างออบเจกต์ Text สำหรับแสดงข้อความบนหน้าจอ
+        self.text = text_default
+        self.size_text = size_text
+        self.color_text = color_text
+        self.font = font if font else pygame.font.Font(None, size_text)  # ใช้ฟอนต์เริ่มต้นถ้าไม่ระบุ
+
+    def show(self, 
+             screen_draw: pygame.Surface, 
+             x: int, y: int,
+             text=None,
+             center_mode=False):
+        if text is not None:
+            self.text = text
+        text_surface = self.font.render(self.text, True, self.color_text)
+        if center_mode:
+            text_rect = text_surface.get_rect()  # สร้าง text_rect ก่อน
+            text_rect.centerx = x  # กำหนดตำแหน่งกึ่งกลางในแนวแกน x
+            text_rect.top = y     # กำหนดตำแหน่ง y ตามที่ต้องการ
+        else:
+            text_rect = text_surface.get_rect(topleft=(x, y))
+        screen_draw.blit(text_surface, text_rect)
