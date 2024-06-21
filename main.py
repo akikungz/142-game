@@ -26,6 +26,7 @@ class Variable():
         self.text_normal = fw.Text('', 30, BLACK)
         # ตัวแปรของปุ่ม
         self.btnPlay = fw.Button('play', 20, WHITE, DARK_BLUE)
+        self.btnGacha = fw.Button('gacha', 20, WHITE, DARK_BLUE)
         self.btnSetting = fw.Button('setting', 20, WHITE, DARK_BLUE)
         self.btnExit = fw.Button('exit', 20, WHITE, RED)
         self.btnPrevious = fw.Button('<', 20, WHITE, DARK_BLUE)
@@ -47,6 +48,7 @@ var = Variable()
 while True:
     # ตัวแปรสำหรับเข้าแต่ละหน้า
     page_play = False
+    page_gacha = False
     page_setting = False
     # ตัวแปรอีเว้น
     events = pygame.event.get()
@@ -61,6 +63,8 @@ while True:
         elif var.btnPlay.click(event):
             page_play = True
             var.set_start()
+        elif var.btnGacha.click(event):
+            page_gacha = True
         elif var.btnSetting.click(event):
             page_setting = True
         elif var.btnExit.click(event):
@@ -68,9 +72,11 @@ while True:
             sys.exit()
     
     screen.window.fill(WHITE)
+    var.text_normal.show(screen.window, screen.pack_x(320), screen.pack_y(120), '142 Game', center_mode=True)
     var.btnPlay.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(150))
-    var.btnSetting.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(180))
-    var.btnExit.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(210))
+    var.btnGacha.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(180))
+    var.btnSetting.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(210))
+    var.btnExit.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(240))
     pygame.display.flip()
     var.clock.tick(30)
 
