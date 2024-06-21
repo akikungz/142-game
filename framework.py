@@ -93,7 +93,10 @@ class Button():
         pygame.draw.rect(screen_draw, button_color, self.button, 0, self.radius)
         screen_draw.blit(self.font.render(self.text, True, text_color), self.text_rect)
 
-    def set_button(self, width_button=1, height_button=1, x=1, y=1):
+    def set_button(self, 
+                   width_button: int,
+                   height_button: int, 
+                   x: int, y: int):
         self.text_rect = self.text_surface.get_rect(center=(x+(width_button/2), y+(height_button/2)))
         self.button = pygame.Rect(x, y, width_button, height_button)
     
