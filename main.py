@@ -97,7 +97,7 @@ while True:
     
     screen.window.fill(var.colors.WHITE)
     var.text_name_game.show(screen.window, screen.pack_x(320), screen.pack_y(120), center_mode=True)
-    var.text_normal.show(screen.window, screen.pack_x(600), screen.pack_y(340), 'v.0.0.7', center_mode=True)
+    var.text_normal.show(screen.window, screen.pack_x(600), screen.pack_y(340), 'v.0.0.9', center_mode=True)
     var.btnPlay.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(150))
     var.btnGacha.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(180))
     var.btnSetting.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(210))

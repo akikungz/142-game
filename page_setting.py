@@ -15,20 +15,19 @@ def main(page_setting_run: bool,
             if event.key == pygame.K_ESCAPE:  # Press ESC to exit
                 pygame.quit()
                 sys.exit()
-        elif var.btnExit.click(event):
-            page_setting_run = False
-        elif var.btnPrevious.click(event):
-            var.volume_down()
-        elif var.btnNext.click(event):
-            var.volume_up()
-
-        if var.dropdownScreen.handle_event(event):
+        elif var.dropdownScreen.handle_event(event):
             selected_option = var.dropdownScreen.selected_option
             if selected_option == 'Full Screen':
                 screen.set_fullscreen_mode()
             else:
                 w, h = map(int, selected_option.split('x'))
                 screen.set_screen(w, h)
+        elif var.btnExit.click(event):
+            page_setting_run = False
+        elif var.btnPrevious.click(event):
+            var.volume_down()
+        elif var.btnNext.click(event):
+            var.volume_up()
     
     # text
     text_screen_size = fw.Text('screen size : ', 30, var.colors.BLACK)
