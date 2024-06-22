@@ -5,6 +5,7 @@ import colors
 import get_image
 import get_audio
 import page_setting
+import page_gacha
 import framework as fw
 
 
@@ -15,12 +16,16 @@ pygame.init()
 class Variable():
     def __init__(self):
         self.clock = pygame.time.Clock()
+        # ตัวแปร
+        self.result = 'Random Now!!'
+        self.count_gacha = 0
         # Colors
         self.colors = colors.Colors()
         # ตัวแปรของเพลง
         self.audio_volume = 0.1
         self.audio_background_music = pygame.mixer.Sound(get_audio.debirun_sound)
-        self.audio_background_music.set_volume(self.audio_volume)
+        self.audio_gacha = pygame.mixer.Sound(get_audio.gacha_sound)
+        self.set_audio_volume()
         self.audio_background_music.play(-1)
         # ตัวแปรข้อความ
         self.text_name_game = fw.Text('142 Game', 50, self.colors.BLACK)
@@ -32,6 +37,7 @@ class Variable():
         self.btnExit = fw.Button('exit', 20, self.colors.WHITE, self.colors.RED)
         self.btnPrevious = fw.Button('<', 20, self.colors.WHITE, self.colors.DARK_BLUE)
         self.btnNext = fw.Button('>', 20, self.colors.WHITE, self.colors.DARK_BLUE)
+        self.btnRandom = fw.Button('random', 20, self.colors.WHITE, self.colors.GOLD)
         # ตัวแปรของ dropdown
         self.dropdownScreen = fw.Dropdown(['Full Screen', '1920x1080', '1280x720', '854x480'], 24, self.colors.WHITE, self.colors.DARK_BLUE)
         # set ค่าเริ่มต้น
@@ -42,6 +48,7 @@ class Variable():
 
     def set_audio_volume(self):
         self.audio_background_music.set_volume(self.audio_volume)
+        self.audio_gacha.set_volume(self.audio_volume)
 
     def volume_up(self):
         self.audio_volume += 0.1
@@ -89,13 +96,17 @@ while True:
     
     screen.window.fill(var.colors.WHITE)
     var.text_name_game.show(screen.window, screen.pack_x(320), screen.pack_y(120), center_mode=True)
-    var.text_normal.show(screen.window, screen.pack_x(600), screen.pack_y(340), 'v.0.0.5', center_mode=True)
+    var.text_normal.show(screen.window, screen.pack_x(600), screen.pack_y(340), 'v.0.0.7', center_mode=True)
     var.btnPlay.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(150))
     var.btnGacha.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(180))
     var.btnSetting.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(210))
     var.btnExit.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(240))
     pygame.display.flip()
     var.clock.tick(30)
+
+    var.result = 'Random Now!!'
+    while page_gacha_run:
+        page_gacha_run = page_gacha.main(page_gacha_run, pygame, var, screen)
 
     while page_setting_run:
         page_setting_run = page_setting.main(page_setting_run, pygame, var, screen)

@@ -17,3 +17,5 @@ def load_audio(base64_string):
 
 from audio import debirun_sound_test
 debirun_sound = load_audio(debirun_sound_test.audio)
+from audio import gacha_sound_test
+gacha_sound = load_audio(gacha_sound_test.audio)
