@@ -7,5 +7,5 @@ if getattr(sys, '_MEIPASS', None):
 else:
     base_path = os.path.abspath(".")
 
-# สร้าง path ไปยังไฟล์เสียง
+# สร้าง path ไปยังไฟล์รูป
 test = os.path.join(base_path, "Assets", "audio", "test.png")
