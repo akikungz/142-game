@@ -33,7 +33,7 @@ def main(page_setting_run: bool,
     # text
     text_screen_size = fw.Text('screen size : ', 30, var.colors.BLACK)
     text_audio = fw.Text('audio : ', 30, var.colors.BLACK)
-    text_audio_volume = fw.Text(f'{int(var.audio_volume*10)*10} %', 30, var.colors.BLACK)
+    text_audio_volume = fw.Text(f'{var.audio_volume*10} %', 30, var.colors.BLACK)
     
     screen.window.fill(var.colors.WHITE)
     text_screen_size.show(screen.window, screen.pack_x(200), screen.pack_y(135))

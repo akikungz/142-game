@@ -22,7 +22,7 @@ class Variable():
         # Colors
         self.colors = colors.Colors()
         # ตัวแปรของเพลง
-        self.audio_volume = 0.1
+        self.audio_volume = 1
         self.audio_background_music = pygame.mixer.Sound(get_audio.debirun_sound)
         self.audio_gacha = pygame.mixer.Sound(get_audio.gacha_sound)
         self.set_audio_volume()
@@ -47,19 +47,20 @@ class Variable():
         pass
 
     def set_audio_volume(self):
-        self.audio_background_music.set_volume(self.audio_volume)
-        self.audio_gacha.set_volume(self.audio_volume)
+        audio_volume = self.audio_volume / 10
+        self.audio_background_music.set_volume(audio_volume)
+        self.audio_gacha.set_volume(audio_volume)
 
     def volume_up(self):
-        self.audio_volume += 0.1
-        if self.audio_volume > 1.0:
-            self.audio_volume = 1.0
+        self.audio_volume += 1
+        if self.audio_volume > 10:
+            self.audio_volume = 10
         self.set_audio_volume()
 
     def volume_down(self):
-        self.audio_volume -= 0.1
-        if self.audio_volume < 0.0:
-            self.audio_volume = 0.0
+        self.audio_volume -= 1
+        if self.audio_volume < 0:
+            self.audio_volume = 0
         self.set_audio_volume()
 
 
