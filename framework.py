@@ -1,6 +1,17 @@
+import sys
+import os
 import pygame
 from math import ceil
 
+def get_font():
+    # ตรวจสอบว่าอยู่ใน onefile mode หรือไม่
+    if getattr(sys, '_MEIPASS', None):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+
+    # สร้าง path ไปยังไฟล์ font
+    return os.path.join(base_path, "Assets", "font", "Mali-Regular.ttf")
 
 class Screen():
     def __init__(self, x: int, y: int):
@@ -65,7 +76,7 @@ class Button():
                  font_color: tuple, 
                  color_button: tuple, 
                  radius=20, 
-                 font=None):
+                 font=get_font()):
         self.text = text
         self.font = pygame.font.SysFont(font, font_size) if font else pygame.font.SysFont(None, font_size)
         self.text_surface = self.font.render(text, True, font_color)
@@ -119,14 +130,14 @@ class Button():
 class Text():
     def __init__(self, 
                  text_default: str, 
-                 size_text: int, 
+                 font_size: int, 
                  color_text: tuple, 
-                 font=None):
+                 font=get_font()):
         # สร้างออบเจกต์ Text สำหรับแสดงข้อความบนหน้าจอ
         self.text = text_default
-        self.size_text = size_text
+        self.font_size = font_size
         self.color_text = color_text
-        self.font = font if font else pygame.font.Font(None, size_text)  # ใช้ฟอนต์เริ่มต้นถ้าไม่ระบุ
+        self.font = pygame.font.SysFont(font, font_size) if font else pygame.font.SysFont(None, font_size)  # ใช้ฟอนต์เริ่มต้นถ้าไม่ระบุ
 
     def show(self, 
              screen_draw: pygame.Surface, 
@@ -151,7 +162,7 @@ class Dropdown():
                  font_size: int,
                  font_color: tuple, 
                  color_dropdown: tuple, 
-                 font=None):
+                 font=get_font()):
         self.__options = options
         self.__font = pygame.font.SysFont(font, font_size) if font else pygame.font.SysFont(None, font_size)
         self.__font_color = font_color
