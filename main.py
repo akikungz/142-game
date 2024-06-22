@@ -17,6 +17,11 @@ class Variable():
         self.clock = pygame.time.Clock()
         # Colors
         self.colors = colors.Colors()
+        # ตัวแปรของเพลง
+        self.audio_volume = 0.1
+        self.audio_background_music = pygame.mixer.Sound(get_audio.debirun_sound)
+        self.audio_background_music.set_volume(self.audio_volume)
+        self.audio_background_music.play(-1)
         # ตัวแปรข้อความ
         self.text_name_game = fw.Text('142 Game', 50, self.colors.BLACK)
         self.text_normal = fw.Text('', 30, self.colors.BLACK)
@@ -34,6 +39,21 @@ class Variable():
 
     def set_start(self):
         pass
+
+    def set_audio_volume(self):
+        self.audio_background_music.set_volume(self.audio_volume)
+
+    def volume_up(self):
+        self.audio_volume += 0.1
+        if self.audio_volume > 1.0:
+            self.audio_volume = 1.0
+        self.set_audio_volume()
+
+    def volume_down(self):
+        self.audio_volume -= 0.1
+        if self.audio_volume < 0.0:
+            self.audio_volume = 0.0
+        self.set_audio_volume()
 
 
 # global variable
