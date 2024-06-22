@@ -41,14 +41,14 @@ def main(page_gacha_run: bool,
 
 def gacha_summon():
     probabilities = {
-        "UR": 1.42,
-        "SSR": 18.58,
-        "SR": 30,
-        "R": 50
+        "UR": 142, # 1.42 %
+        "SSR": 1858, # 18.58 %
+        "SR": 3000, # 30 %
+        "R": 5000 # 50 %
     }
 
     # Generate a random number between 0 and 100
-    roll = random.random() * 100
+    roll = random.randint(1, 10_000)
 
     # Determine the rarity based on the roll
     cumulative_probability = 0
