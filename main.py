@@ -1,8 +1,10 @@
 import sys
 import pygame
 import random
+import colors
 import get_image
 import get_audio
+import page_setting
 import framework as fw
 
 
@@ -10,29 +12,23 @@ import framework as fw
 pygame.init()
 
 
-# Colors
-WHITE = (255, 255, 255)
-GREY = (198, 198, 198)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-DARK_BLUE = (0, 0, 139)
-
-
 class Variable():
     def __init__(self):
         self.clock = pygame.time.Clock()
+        # Colors
+        self.colors = colors.Colors()
         # ตัวแปรข้อความ
-        self.text_normal = fw.Text('', 30, BLACK)
+        self.text_name_game = fw.Text('142 Game', 50, self.colors.BLACK)
+        self.text_normal = fw.Text('', 30, self.colors.BLACK)
         # ตัวแปรของปุ่ม
-        self.btnPlay = fw.Button('play', 20, WHITE, DARK_BLUE)
-        self.btnGacha = fw.Button('gacha', 20, WHITE, DARK_BLUE)
-        self.btnSetting = fw.Button('setting', 20, WHITE, DARK_BLUE)
-        self.btnExit = fw.Button('exit', 20, WHITE, RED)
-        self.btnPrevious = fw.Button('<', 20, WHITE, DARK_BLUE)
-        self.btnNext = fw.Button('>', 20, WHITE, DARK_BLUE)
+        self.btnPlay = fw.Button('play', 20, self.colors.WHITE, self.colors.DARK_BLUE)
+        self.btnGacha = fw.Button('gacha', 20, self.colors.WHITE, self.colors.DARK_BLUE)
+        self.btnSetting = fw.Button('setting', 20, self.colors.WHITE, self.colors.DARK_BLUE)
+        self.btnExit = fw.Button('exit', 20, self.colors.WHITE, self.colors.RED)
+        self.btnPrevious = fw.Button('<', 20, self.colors.WHITE, self.colors.DARK_BLUE)
+        self.btnNext = fw.Button('>', 20, self.colors.WHITE, self.colors.DARK_BLUE)
         # ตัวแปรของ dropdown
-        self.dropdownScreen = fw.Dropdown(['Full Screen', '1920x1080', '1280x720', '854x480'], 24, WHITE, DARK_BLUE)
+        self.dropdownScreen = fw.Dropdown(['Full Screen', '1920x1080', '1280x720', '854x480'], 24, self.colors.WHITE, self.colors.DARK_BLUE)
         # set ค่าเริ่มต้น
         self.set_start()
 
@@ -47,9 +43,9 @@ var = Variable()
 
 while True:
     # ตัวแปรสำหรับเข้าแต่ละหน้า
-    page_play = False
-    page_gacha = False
-    page_setting = False
+    page_play_run = False
+    page_gacha_run = False
+    page_setting_run = False
     # ตัวแปรอีเว้น
     events = pygame.event.get()
     for event in events:
@@ -61,18 +57,19 @@ while True:
                 pygame.quit()
                 sys.exit()
         elif var.btnPlay.click(event):
-            page_play = True
+            page_play_run = True
             var.set_start()
         elif var.btnGacha.click(event):
-            page_gacha = True
+            page_gacha_run = True
         elif var.btnSetting.click(event):
-            page_setting = True
+            page_setting_run = True
         elif var.btnExit.click(event):
             pygame.quit()
             sys.exit()
     
-    screen.window.fill(WHITE)
-    var.text_normal.show(screen.window, screen.pack_x(320), screen.pack_y(120), '142 Game', center_mode=True)
+    screen.window.fill(var.colors.WHITE)
+    var.text_name_game.show(screen.window, screen.pack_x(320), screen.pack_y(120), center_mode=True)
+    var.text_normal.show(screen.window, screen.pack_x(600), screen.pack_y(340), 'v.0.0.5', center_mode=True)
     var.btnPlay.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(150))
     var.btnGacha.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(180))
     var.btnSetting.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(210))
@@ -80,43 +77,5 @@ while True:
     pygame.display.flip()
     var.clock.tick(30)
 
-    while page_setting:
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:  # Press ESC to exit
-                    pygame.quit()
-                    sys.exit()
-            elif var.btnExit.click(event):
-                page_setting = False
-            # elif var.btnPrevious.click(event):
-            #     key_btn -= 1
-            #     if key_btn < 0:
-            #         key_btn = len(screen_size) - 1
-            #     set_screen_size(screen, screen_size, key_btn)
-            # elif var.btnNext.click(event):
-            #     key_btn += 1
-            #     if key_btn > len(screen_size) - 1:
-            #         key_btn = 0
-            #     set_screen_size(screen, screen_size, key_btn)
-
-            if var.dropdownScreen.handle_event(event):
-                selected_option = var.dropdownScreen.selected_option
-                if selected_option == 'Full Screen':
-                    screen.set_fullscreen_mode()
-                else:
-                    w, h = map(int, selected_option.split('x'))
-                    screen.set_screen(w, h)
-        
-        screen.window.fill(WHITE)
-        var.text_normal.show(screen.window, screen.pack_x(200), screen.pack_y(135), 'screen size')
-        var.dropdownScreen.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(300), screen.pack_y(130))
-        # var.btnPrevious.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(260), screen.pack_y(130))
-        # var.btnNext.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(350), screen.pack_y(130))
-        var.btnExit.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(520), screen.pack_y(10))
-
-        pygame.display.flip()
-        var.clock.tick(30)
+    while page_setting_run:
+        page_setting_run = page_setting.main(page_setting_run, pygame, var, screen)
