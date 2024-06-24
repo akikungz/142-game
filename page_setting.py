@@ -6,6 +6,13 @@ def main(page_setting_run: bool,
          pygame: pygame, 
          var: object, 
          screen: object) -> bool:
+    
+    # ตัวแปร text ในหน้า setting
+    text_screen_size = fw.Text('screen size : ', 30, var.colors.BLACK)
+    text_audio = fw.Text('audio : ', 30, var.colors.BLACK)
+    text_audio_volume = fw.Text(f'{var.audio_volume} %', 30, var.colors.BLACK)
+
+    # page_setting
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
@@ -24,22 +31,25 @@ def main(page_setting_run: bool,
                 screen.set_screen(w, h)
         elif var.btnExit.click(event):
             page_setting_run = False
-        elif var.btnPrevious.click(event):
-            var.volume_down()
-        elif var.btnNext.click(event):
-            var.volume_up()
+        elif var.btnReduce_1.click(event):
+            var.volume_down(1)
+        elif var.btnIncrease_1.click(event):
+            var.volume_up(1)
+        elif var.btnReduce_10.click(event):
+            var.volume_down(10)
+        elif var.btnIncrease_10.click(event):
+            var.volume_up(10)
     
-    # text
-    text_screen_size = fw.Text('screen size : ', 30, var.colors.BLACK)
-    text_audio = fw.Text('audio : ', 30, var.colors.BLACK)
-    text_audio_volume = fw.Text(f'{var.audio_volume*10} %', 30, var.colors.BLACK)
-    
+    # เคลียร์หน้าจอให้เป็นสีขาว
     screen.window.fill(var.colors.WHITE)
+    # จัดวางปุ่มและตัวหนังสือ
     text_screen_size.show(screen.window, screen.pack_x(200), screen.pack_y(135))
     text_audio.show(screen.window, screen.pack_x(200), screen.pack_y(165))
-    var.btnPrevious.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(260), screen.pack_y(160))
-    text_audio_volume.show(screen.window, screen.pack_x(320), screen.pack_y(165) ,center_mode=True)
-    var.btnNext.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(350), screen.pack_y(160))
+    var.btnReduce_1.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(260), screen.pack_y(160))
+    var.btnReduce_10.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(290), screen.pack_y(160))
+    text_audio_volume.show(screen.window, screen.pack_x(350), screen.pack_y(165) ,center_mode=True)
+    var.btnIncrease_1.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(380), screen.pack_y(160))
+    var.btnIncrease_10.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(410), screen.pack_y(160))
     var.dropdownScreen.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(300), screen.pack_y(130))
     var.btnExit.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(520), screen.pack_y(10))
 

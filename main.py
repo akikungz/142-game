@@ -22,7 +22,7 @@ class Variable():
         # Colors
         self.colors = colors.Colors()
         # ตัวแปรของเพลง
-        self.audio_volume = 1
+        self.audio_volume = 10
         self.audio_background_music = pygame.mixer.Sound(get_audio.debirun_sound)
         self.audio_gacha = pygame.mixer.Sound(get_audio.gacha_sound)
         self.set_audio_volume()
@@ -37,6 +37,10 @@ class Variable():
         self.btnExit = fw.Button('exit', 20, self.colors.WHITE, self.colors.RED)
         self.btnPrevious = fw.Button('<', 20, self.colors.WHITE, self.colors.DARK_BLUE)
         self.btnNext = fw.Button('>', 20, self.colors.WHITE, self.colors.DARK_BLUE)
+        self.btnReduce_1 = fw.Button('-1', 20, self.colors.WHITE, self.colors.DARK_BLUE)
+        self.btnIncrease_1 = fw.Button('+1', 20, self.colors.WHITE, self.colors.DARK_BLUE)
+        self.btnReduce_10 = fw.Button('-10', 20, self.colors.WHITE, self.colors.DARK_BLUE)
+        self.btnIncrease_10 = fw.Button('+10', 20, self.colors.WHITE, self.colors.DARK_BLUE)
         self.btnRandom = fw.Button('random', 20, self.colors.WHITE, self.colors.GOLD)
         # ตัวแปรของ dropdown
         self.dropdownScreen = fw.Dropdown(['Full Screen', '1920x1080', '1280x720', '854x480'], 24, self.colors.WHITE, self.colors.DARK_BLUE)
@@ -47,18 +51,18 @@ class Variable():
         pass
 
     def set_audio_volume(self):
-        audio_volume = self.audio_volume / 10
+        audio_volume = self.audio_volume / 100
         self.audio_background_music.set_volume(audio_volume)
         self.audio_gacha.set_volume(audio_volume)
 
-    def volume_up(self):
-        self.audio_volume += 1
-        if self.audio_volume > 10:
-            self.audio_volume = 10
+    def volume_up(self, key):
+        self.audio_volume += key
+        if self.audio_volume > 100:
+            self.audio_volume = 100
         self.set_audio_volume()
 
-    def volume_down(self):
-        self.audio_volume -= 1
+    def volume_down(self, key):
+        self.audio_volume -= key
         if self.audio_volume < 0:
             self.audio_volume = 0
         self.set_audio_volume()
@@ -97,7 +101,7 @@ while True:
     
     screen.window.fill(var.colors.WHITE)
     var.text_name_game.show(screen.window, screen.pack_x(320), screen.pack_y(120), center_mode=True)
-    var.text_normal.show(screen.window, screen.pack_x(600), screen.pack_y(340), 'v.0.0.9', center_mode=True)
+    var.text_normal.show(screen.window, screen.pack_x(600), screen.pack_y(340), 'v.0.0.12', center_mode=True)
     var.btnPlay.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(150))
     var.btnGacha.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(180))
     var.btnSetting.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(210))
