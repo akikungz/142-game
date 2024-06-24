@@ -8,4 +8,4 @@ else:
     base_path = os.path.abspath(".")
 
 # สร้าง path ไปยังไฟล์รูป
-test = os.path.join(base_path, "Assets", "audio", "test.png")
+icon = os.path.join(base_path, "Assets", "icon.png")

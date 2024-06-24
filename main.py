@@ -11,6 +11,8 @@ import framework as fw
 
 # Initialize Pygame
 pygame.init()
+pygame.display.set_caption('142 game')
+pygame.display.set_icon(pygame.image.load(get_image.icon))
 
 
 class Variable():
