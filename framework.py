@@ -118,13 +118,14 @@ class Button():
             else:
                 self.state = "normal"
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if self.button.collidepoint(event.pos):
+            if self.button.collidepoint(event.pos) and event.button == 1:  # ตรวจสอบว่าเป็นปุ่มซ้าย
                 self.state = "pressed"
-                return True  # ส่งคืนค่าว่ากดปุ่มแล้ว
+                return True  # ส่งคืนค่าว่ากดปุ่มซ้ายแล้ว
         elif event.type == pygame.MOUSEBUTTONUP:
             if self.state == "pressed":
                 self.state = "normal"
         return False
+
 
 
 class Text():
