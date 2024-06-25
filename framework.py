@@ -78,7 +78,7 @@ class Button():
                  radius=20, 
                  font_path=get_font()):
         self.text = text
-        self.font = pygame.font.SysFont(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)
+        self.font = pygame.font.Font(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)
         self.text_surface = self.font.render(text, True, font_color)
         self.set_button()
         self.color_button = color_button
@@ -127,6 +127,55 @@ class Button():
         return False
 
 
+class ImageButton(Button):
+    def __init__(self, 
+                 text: str, 
+                 font_size: int, 
+                 font_color: tuple, 
+                 image_path: str, 
+                 font_path=get_font()):
+        super().__init__(text, font_size, font_color, (0, 0, 0), 0, font_path)  # ส่งค่าที่ไม่ใช้ไปยัง super
+        self.image = pygame.image.load(image_path).convert_alpha()
+        self.original_image = self.image.copy()  # เก็บสำเนาภาพเดิมเพื่อการทำให้สว่างขึ้น
+        self.image_rect = self.image.get_rect()
+
+    def lighten_image(self, image, amount=50):
+        """เพิ่มความสว่างให้กับรูปภาพ"""
+        lighten = pygame.Surface(image.get_size()).convert_alpha()
+        lighten.fill((amount, amount, amount, 0))
+        lightened_image = image.copy()
+        lightened_image.blit(lighten, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
+        return lightened_image
+
+    def show(self, 
+             screen_draw: pygame.Surface, 
+             width_button: int, 
+             height_button: int, 
+             x: int, y: int):
+        self.set_button(width_button, height_button, x, y)
+        self.image = pygame.transform.scale(self.original_image, (width_button, height_button))
+        text_color = self.font_color
+        image = self.image
+        
+        # เมื่อเมาส์ลอยอยู่เหนือปุ่ม
+        if self.state == "hover":
+            image = self.lighten_image(self.image)  # ทำให้ปุ่มสว่างขึ้น
+
+        # วาดรูปภาพลงบนปุ่ม
+        self.image_rect = image.get_rect(topleft=(x, y))
+        screen_draw.blit(image, self.image_rect)
+
+        # วาดข้อความบนปุ่ม
+        screen_draw.blit(self.font.render(self.text, True, text_color), self.text_rect)
+
+    def set_button(self, 
+                   width_button=1,
+                   height_button=1,
+                   x=1, y=1):
+        self.image_rect = pygame.Rect(x, y, width_button, height_button)
+        self.text_rect = self.text_surface.get_rect(center=self.image_rect.center)
+        self.button = self.image_rect
+
 
 class Text():
     def __init__(self, 
@@ -138,7 +187,7 @@ class Text():
         self.text = text_default
         self.font_size = font_size
         self.font_color = font_color
-        self.font = pygame.font.SysFont(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)  # ใช้ฟอนต์เริ่มต้นถ้าไม่ระบุ
+        self.font = pygame.font.Font(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)  # ใช้ฟอนต์เริ่มต้นถ้าไม่ระบุ
 
     def show(self, 
              screen_draw: pygame.Surface, 
@@ -165,7 +214,7 @@ class Dropdown():
                  color_dropdown: tuple, 
                  font_path=get_font()):
         self.__options = options
-        self.__font = pygame.font.SysFont(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)
+        self.__font = pygame.font.Font(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)
         self.__font_color = font_color
         self.__color_dropdown = color_dropdown
         self.__active = False

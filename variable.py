@@ -23,10 +23,10 @@ class Variable():
         self.text_name_game = fw.Text('142 Game', 50, self.colors.BLACK)
         self.text_version = fw.Text('', 30, self.colors.BLACK)
         # ตัวแปรของปุ่ม
-        self.btnPlay = fw.Button('play', 20, self.colors.WHITE, self.colors.DARK_BLUE)
-        self.btnGacha = fw.Button('gacha', 20, self.colors.WHITE, self.colors.DARK_BLUE)
-        self.btnSetting = fw.Button('setting', 20, self.colors.WHITE, self.colors.DARK_BLUE)
-        self.btnExit = fw.Button('exit', 20, self.colors.WHITE, self.colors.RED)
+        self.btnPlay = fw.ImageButton('', 20, self.colors.WHITE, get_image.btnPlay)
+        self.btnGacha = fw.ImageButton('', 20, self.colors.WHITE, get_image.btnGacha)
+        self.btnSetting = fw.ImageButton('', 20, self.colors.WHITE, get_image.btnSetting)
+        self.btnExit = fw.Button('ออก', 20, self.colors.WHITE, self.colors.RED)
         self.btnPrevious = fw.Button('<', 20, self.colors.WHITE, self.colors.DARK_BLUE)
         self.btnNext = fw.Button('>', 20, self.colors.WHITE, self.colors.DARK_BLUE)
         # -------------------------------------

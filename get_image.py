@@ -9,3 +9,6 @@ else:
 
 # สร้าง path ไปยังไฟล์รูป
 icon = os.path.join(base_path, "Assets", "icon.png")
+btnPlay = os.path.join(base_path, "Assets", "picture", "button", "btnPlay.png")
+btnGacha = os.path.join(base_path, "Assets", "picture", "button", "btnGacha.png")
+btnSetting = os.path.join(base_path, "Assets", "picture", "button", "btnSetting.png")

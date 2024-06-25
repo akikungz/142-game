@@ -47,12 +47,12 @@ while True:
             sys.exit()
     
     screen.window.fill(var.colors.WHITE)
-    var.text_name_game.show(screen.window, screen.pack_x(320), screen.pack_y(120), center_mode=True)
-    var.text_version.show(screen.window, screen.pack_x(600), screen.pack_y(340), 'v.0.0.13', center_mode=True)
-    var.btnPlay.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(150))
-    var.btnGacha.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(180))
-    var.btnSetting.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(210))
-    var.btnExit.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(240))
+    var.text_name_game.show(screen.window, screen.pack_x(10), screen.pack_y(10))
+    var.text_version.show(screen.window, screen.pack_x(15), screen.pack_y(40), 'v.0.0.15')
+    var.btnGacha.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(240))
+    var.btnPlay.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(300))
+    var.btnSetting.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(520), screen.pack_y(10))
+    var.btnExit.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(10))
     pygame.display.flip()
     var.clock.tick(30)
 

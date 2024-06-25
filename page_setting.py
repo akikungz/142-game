@@ -44,11 +44,11 @@ def main(page_setting_run: bool,
     # เคลียร์หน้าจอให้เป็นสีขาว
     screen.window.fill(var.colors.WHITE)
     # จัดวางปุ่มและตัวหนังสือ
-    text_screen_size.show(screen.window, screen.pack_x(200), screen.pack_y(135))
-    text_audio.show(screen.window, screen.pack_x(200), screen.pack_y(165))
+    text_screen_size.show(screen.window, screen.pack_x(200), screen.pack_y(130))
+    text_audio.show(screen.window, screen.pack_x(200), screen.pack_y(160))
     var.btnReduce_1.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(260), screen.pack_y(160))
     var.btnReduce_10.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(290), screen.pack_y(160))
-    text_audio_volume.show(screen.window, screen.pack_x(350), screen.pack_y(165) ,center_mode=True)
+    text_audio_volume.show(screen.window, screen.pack_x(350), screen.pack_y(160) ,center_mode=True)
     var.btnIncrease_1.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(380), screen.pack_y(160))
     var.btnIncrease_10.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(410), screen.pack_y(160))
     var.dropdownScreen.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(300), screen.pack_y(130))
