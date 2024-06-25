@@ -3,16 +3,6 @@ import os
 import pygame
 from math import ceil
 
-def get_font():
-    # ตรวจสอบว่าอยู่ใน onefile mode หรือไม่
-    if getattr(sys, '_MEIPASS', None):
-        base_path = sys._MEIPASS
-    else:
-        base_path = os.path.abspath(".")
-
-    # สร้าง path ไปยังไฟล์ font
-    return os.path.join(base_path, "Assets", "font", "Mali-Regular.ttf")
-
 class Screen():
     def __init__(self, x: int, y: int):
         # กำหนดการแบ่งหน้าจอ
@@ -69,20 +59,46 @@ class Screen():
         self.SCREEN_HEIGHT = screen_info.current_h
 
 
-class Button():
+class FontSystem():
+    def __init__(self,
+                 font_path: str,
+                 font_size: int,
+                 font_color: tuple):
+        if font_path is None:
+            self.font_path = self.__get_font()
+        else:
+            self.font_path = font_path
+        self.font_size = font_size
+        self.font_color = font_color
+        self.create_font()
+    
+    def create_font(self):
+        self.font = pygame.font.Font(self.font_path, self.font_size) if self.font_path else pygame.font.SysFont(None, self.font_size)
+    
+    def __get_font(self):
+        # ตรวจสอบว่าอยู่ใน onefile mode หรือไม่
+        if getattr(sys, '_MEIPASS', None):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath(".")
+
+        # สร้าง path ไปยังไฟล์ font
+        return os.path.join(base_path, "Assets", "font", "Mali-Regular.ttf")
+
+
+class Button(FontSystem):
     def __init__(self, 
                  text: str, 
                  font_size: int, 
                  font_color: tuple, 
                  color_button: tuple, 
                  radius=20, 
-                 font_path=get_font()):
+                 font_path=None):
+        super().__init__(font_path, font_size, font_color)
         self.text = text
-        self.font = pygame.font.Font(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)
         self.text_surface = self.font.render(text, True, font_color)
         self.set_button()
         self.color_button = color_button
-        self.font_color = font_color
         self.radius = radius
         # สถานะทั้งหมดได้แก่ "normal", "hover", "pressed"
         self.state = "normal"  
@@ -133,7 +149,7 @@ class ImageButton(Button):
                  font_size: int, 
                  font_color: tuple, 
                  image_path: str, 
-                 font_path=get_font()):
+                 font_path=None):
         super().__init__(text, font_size, font_color, (0, 0, 0), 0, font_path)  # ส่งค่าที่ไม่ใช้ไปยัง super
         self.image = pygame.image.load(image_path).convert_alpha()
         self.original_image = self.image.copy()  # เก็บสำเนาภาพเดิมเพื่อการทำให้สว่างขึ้น
@@ -177,17 +193,15 @@ class ImageButton(Button):
         self.button = self.image_rect
 
 
-class Text():
+class Text(FontSystem):
     def __init__(self, 
                  text_default: str, 
                  font_size: int, 
                  font_color: tuple, 
-                 font_path=get_font()):
+                 font_path=None):
+        super().__init__(font_path, font_size, font_color)
         # สร้างออบเจกต์ Text สำหรับแสดงข้อความบนหน้าจอ
         self.text = text_default
-        self.font_size = font_size
-        self.font_color = font_color
-        self.font = pygame.font.Font(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)  # ใช้ฟอนต์เริ่มต้นถ้าไม่ระบุ
 
     def show(self, 
              screen_draw: pygame.Surface, 
@@ -206,16 +220,15 @@ class Text():
         screen_draw.blit(text_surface, text_rect)
 
 
-class Dropdown():
+class Dropdown(FontSystem):
     def __init__(self, 
                  options: list, 
                  font_size: int,
                  font_color: tuple, 
                  color_dropdown: tuple, 
-                 font_path=get_font()):
+                 font_path=None):
+        super().__init__(font_path, font_size, font_color)
         self.__options = options
-        self.__font = pygame.font.Font(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)
-        self.__font_color = font_color
         self.__color_dropdown = color_dropdown
         self.__active = False
         self.selected_option = options[0]
@@ -229,7 +242,7 @@ class Dropdown():
              x: int, y: int):
         self.rect = pygame.Rect(x, y, width, height)
         pygame.draw.rect(screen_draw, self.__color_dropdown, self.rect)
-        text_surface = self.__font.render(self.selected_option if self.selected_option else self.__options[0], True, self.__font_color)
+        text_surface = self.font.render(self.selected_option if self.selected_option else self.__options[0], True, self.font_color)
         text_rect = text_surface.get_rect(center=(x+(width/2)-10, y+(height/2)))
         screen_draw.blit(text_surface, text_rect)
 
@@ -240,7 +253,7 @@ class Dropdown():
             (self.rect.right - 10, self.rect.centery + 5 * arrow_direction),
             (self.rect.right - 30, self.rect.centery + 5 * arrow_direction)
         ]
-        pygame.draw.polygon(screen_draw, self.__font_color, arrow_points)
+        pygame.draw.polygon(screen_draw, self.font_color, arrow_points)
 
         if self.__active:
             for i, option in enumerate(self.__options):
@@ -250,7 +263,7 @@ class Dropdown():
                 else:
                     color_dropdown = [max(0, c - 55) for c in self.__color_dropdown] # ทำให้มืดลง
                 pygame.draw.rect(screen_draw, color_dropdown, rect)
-                text_surface = self.__font.render(option, True, self.__font_color)
+                text_surface = self.font.render(option, True, self.font_color)
                 text_rect = text_surface.get_rect(center=(rect.x+(width/2), rect.y+(height/2)))
                 screen_draw.blit(text_surface, text_rect)
 
