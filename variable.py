@@ -16,6 +16,8 @@ class Variable():
         self.audio_gacha = pygame.mixer.Sound(get_audio.gacha_sound)
         self.set_audio_volume()
         self.audio_background_music.play(-1)
+        # ตัวแปรของปุ่ม
+        self.btnExit = fw.Button('ออก', 20, self.colors.WHITE, self.colors.RED)
         # -------------------------------------
 
         # ตัวแปรหน้า page_main
@@ -23,10 +25,10 @@ class Variable():
         self.text_name_game = fw.Text('142 Game', 50, self.colors.BLACK)
         self.text_version = fw.Text('', 30, self.colors.BLACK)
         # ตัวแปรของปุ่ม
-        self.btnPlay = fw.ImageButton('', 20, self.colors.WHITE, get_image.btnPlay)
-        self.btnGacha = fw.ImageButton('', 20, self.colors.WHITE, get_image.btnGacha)
-        self.btnSetting = fw.ImageButton('', 20, self.colors.WHITE, get_image.btnSetting)
-        self.btnExit = fw.Button('ออก', 20, self.colors.WHITE, self.colors.RED)
+        self.btnPlay = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnPlay)
+        self.btnGacha = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnGacha)
+        self.btnSetting = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnSetting)
+        self.btnExitImg = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnExitImg)
         self.btnPrevious = fw.Button('<', 20, self.colors.WHITE, self.colors.DARK_BLUE)
         self.btnNext = fw.Button('>', 20, self.colors.WHITE, self.colors.DARK_BLUE)
         # -------------------------------------
