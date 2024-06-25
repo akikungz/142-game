@@ -82,7 +82,7 @@ class Button():
         self.text_surface = self.font.render(text, True, font_color)
         self.set_button()
         self.color_button = color_button
-        self.color_text = font_color
+        self.font_color = font_color
         self.radius = radius
         # สถานะทั้งหมดได้แก่ "normal", "hover", "pressed"
         self.state = "normal"  
@@ -94,12 +94,12 @@ class Button():
              x: int, y: int):
         self.set_button(width_button, height_button, x, y)
         button_color = self.color_button
-        text_color = self.color_text
+        text_color = self.font_color
         
         # เมื่อเมาส์ลอยอยู่เหนือปุ่ม
         if self.state == "hover":
             button_color = [min(255, c + 120) for c in self.color_button] # ทำให้ปุ่มสว่างขึ้น
-            text_color = [min(255, c + 20) for c in self.color_text]
+            text_color = [min(255, c + 20) for c in self.font_color]
         
         pygame.draw.rect(screen_draw, button_color, self.button, 0, self.radius)
         screen_draw.blit(self.font.render(self.text, True, text_color), self.text_rect)
@@ -132,12 +132,12 @@ class Text():
     def __init__(self, 
                  text_default: str, 
                  font_size: int, 
-                 color_text: tuple, 
+                 font_color: tuple, 
                  font=get_font()):
         # สร้างออบเจกต์ Text สำหรับแสดงข้อความบนหน้าจอ
         self.text = text_default
         self.font_size = font_size
-        self.color_text = color_text
+        self.font_color = font_color
         self.font = pygame.font.SysFont(font, font_size) if font else pygame.font.SysFont(None, font_size)  # ใช้ฟอนต์เริ่มต้นถ้าไม่ระบุ
 
     def show(self, 
@@ -147,7 +147,7 @@ class Text():
              center_mode=False):
         if text is not None:
             self.text = text
-        text_surface = self.font.render(self.text, True, self.color_text)
+        text_surface = self.font.render(self.text, True, self.font_color)
         if center_mode:
             text_rect = text_surface.get_rect()  # สร้าง text_rect ก่อน
             text_rect.centerx = x  # กำหนดตำแหน่งกึ่งกลางในแนวแกน x
