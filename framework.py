@@ -76,9 +76,9 @@ class Button():
                  font_color: tuple, 
                  color_button: tuple, 
                  radius=20, 
-                 font=get_font()):
+                 font_path=get_font()):
         self.text = text
-        self.font = pygame.font.SysFont(font, font_size) if font else pygame.font.SysFont(None, font_size)
+        self.font = pygame.font.SysFont(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)
         self.text_surface = self.font.render(text, True, font_color)
         self.set_button()
         self.color_button = color_button
@@ -133,12 +133,12 @@ class Text():
                  text_default: str, 
                  font_size: int, 
                  font_color: tuple, 
-                 font=get_font()):
+                 font_path=get_font()):
         # สร้างออบเจกต์ Text สำหรับแสดงข้อความบนหน้าจอ
         self.text = text_default
         self.font_size = font_size
         self.font_color = font_color
-        self.font = pygame.font.SysFont(font, font_size) if font else pygame.font.SysFont(None, font_size)  # ใช้ฟอนต์เริ่มต้นถ้าไม่ระบุ
+        self.font = pygame.font.SysFont(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)  # ใช้ฟอนต์เริ่มต้นถ้าไม่ระบุ
 
     def show(self, 
              screen_draw: pygame.Surface, 
@@ -163,9 +163,9 @@ class Dropdown():
                  font_size: int,
                  font_color: tuple, 
                  color_dropdown: tuple, 
-                 font=get_font()):
+                 font_path=get_font()):
         self.__options = options
-        self.__font = pygame.font.SysFont(font, font_size) if font else pygame.font.SysFont(None, font_size)
+        self.__font = pygame.font.SysFont(font_path, font_size) if font_path else pygame.font.SysFont(None, font_size)
         self.__font_color = font_color
         self.__color_dropdown = color_dropdown
         self.__active = False
