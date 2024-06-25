@@ -68,12 +68,28 @@ class FontSystem():
             self.font_path = self.__get_font()
         else:
             self.font_path = font_path
+        self.base_font_size = font_size  # เก็บขนาด font เริ่มต้น
         self.font_size = font_size
         self.font_color = font_color
         self.create_font()
     
     def create_font(self):
+        # สร้าง font
         self.font = pygame.font.Font(self.font_path, self.font_size) if self.font_path else pygame.font.SysFont(None, self.font_size)
+    
+    def set_font_size(self, window: pygame.Surface):
+        # ดึงค่าความสูงของหน้าจอออกมา
+        window_height = window.get_height()
+        
+        # คำนวณขนาด font ใหม่ตามสัดส่วนของความสูงหน้าจอ
+        # สมมติว่าเราออกแบบ UI สำหรับความสูง 720 pixels
+        scale_factor = window_height / 720
+        new_font_size = int(self.base_font_size * scale_factor)
+        
+        # ถ้าขนาด font เปลี่ยน ให้สร้าง font ใหม่
+        if new_font_size != self.font_size:
+            self.font_size = new_font_size
+            self.create_font()
     
     def __get_font(self):
         # ตรวจสอบว่าอยู่ใน onefile mode หรือไม่
@@ -108,6 +124,7 @@ class Button(FontSystem):
              width_button: int, 
              height_button: int, 
              x: int, y: int):
+        self.set_font_size(screen_draw)
         self.set_button(width_button, height_button, x, y)
         button_color = self.color_button
         text_color = self.font_color
@@ -118,13 +135,19 @@ class Button(FontSystem):
             text_color = [min(255, c + 20) for c in self.font_color]
         
         pygame.draw.rect(screen_draw, button_color, self.button, 0, self.radius)
-        screen_draw.blit(self.font.render(self.text, True, text_color), self.text_rect)
+
+        # render text surface ใหม่
+        text_surface = self.font.render(self.text, True, text_color)
+        
+        # คำนวณตำแหน่งกึ่งกลางของปุ่มใหม่ทุกครั้ง
+        text_rect = text_surface.get_rect(center=self.button.center)
+        
+        screen_draw.blit(text_surface, text_rect)
 
     def set_button(self, 
                    width_button=1,
                    height_button=1,
                    x=1, y=1,):
-        self.text_rect = self.text_surface.get_rect(center=(x+(width_button/2), y+(height_button/2)))
         self.button = pygame.Rect(x, y, width_button, height_button)
     
     def click(self, event):
@@ -168,6 +191,7 @@ class ImageButton(Button):
              width_button: int, 
              height_button: int, 
              x: int, y: int):
+        self.set_font_size(screen_draw)
         self.set_button(width_button, height_button, x, y)
         self.image = pygame.transform.scale(self.original_image, (width_button, height_button))
         text_color = self.font_color
@@ -208,6 +232,7 @@ class Text(FontSystem):
              x: int, y: int,
              text=None,
              center_mode=False):
+        self.set_font_size(screen_draw)
         if text is not None:
             self.text = text
         text_surface = self.font.render(self.text, True, self.font_color)
@@ -240,6 +265,7 @@ class Dropdown(FontSystem):
              width: int, 
              height: int, 
              x: int, y: int):
+        self.set_font_size(screen_draw)
         self.rect = pygame.Rect(x, y, width, height)
         pygame.draw.rect(screen_draw, self.__color_dropdown, self.rect)
         text_surface = self.font.render(self.selected_option if self.selected_option else self.__options[0], True, self.font_color)
