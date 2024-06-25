@@ -41,18 +41,21 @@ def main(page_gacha_run: bool,
 
 def gacha_summon():
     probabilities = {
-        "UR": 142, # 1.42 %
-        "SSR": 1858, # 18.58 %
-        "SR": 3000, # 30 %
-        "R": 5000 # 50 %
+        "SSR": 142,   # ความน่าจะเป็น 1.42%
+        "SR": 1858,   # ความน่าจะเป็น 18.58%
+        "R": 3000,    # ความน่าจะเป็น 30%
+        "N": 5000    # ความน่าจะเป็น 50%
     }
 
-    # Generate a random number between 0 and 100
+    # สร้างตัวเลขสุ่มระหว่าง 1 ถึง 10,000
+    # ตัวเลขนี้จะใช้เป็นตัวตัดสินว่าเราจะได้ไอเทมระดับใด
     roll = random.randint(1, 10_000)
 
-    # Determine the rarity based on the roll
-    cumulative_probability = 0
+    # ตรวจสอบว่าตัวเลขสุ่มที่ได้อยู่ในช่วงความน่าจะเป็นของระดับใด
+    cumulative_probability = 0  # ตัวแปรเก็บความน่าจะเป็นสะสม
     for rarity, probability in probabilities.items():
-        cumulative_probability += probability
+        cumulative_probability += probability 
+        # ถ้าตัวเลขสุ่มน้อยกว่าหรือเท่ากับความน่าจะเป็นสะสม
+        # แสดงว่าเราสุ่มได้ไอเทมระดับนั้น
         if roll <= cumulative_probability:
             return rarity
