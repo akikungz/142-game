@@ -2,10 +2,11 @@ import sys
 import pygame
 import random
 import framework as fw
+from variable import Variable
 
 def main(page_gacha_run: bool, 
          pygame: pygame, 
-         var: object, 
+         var: Variable, 
          screen: object) -> bool:
     events = pygame.event.get()
     for event in events:

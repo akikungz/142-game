@@ -1,10 +1,11 @@
 import sys
 import pygame
 import framework as fw
+from variable import Variable
 
 def main(page_setting_run: bool, 
          pygame: pygame, 
-         var: object, 
+         var: Variable, 
          screen: object) -> bool:
     
     # ตัวแปร text ในหน้า setting
