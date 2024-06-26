@@ -1,7 +1,9 @@
 import sys
 import os
+import ctypes
 import pygame
 from math import ceil
+
 
 class Screen():
     def __init__(self, x: int, y: int):
@@ -13,7 +15,8 @@ class Screen():
 
     def set_fullscreen_mode(self):
         # ตั้งค่าโหมดการแสดงผลเป็นเต็มหน้าจอ
-        self.window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.window = pygame.display.set_mode((0, 0))
+        pygame.display.toggle_fullscreen()
         # ตรวจจับความละเอียดหน้าจอปัจจุบัน
         self.__get_screen_info()
         # แบ่งหน้าจออกเป็น grid
@@ -26,6 +29,21 @@ class Screen():
         self.__get_screen_info()
         # แบ่งหน้าจออกเป็น grid
         self.__set_axis()
+        self.set2center_window()
+
+    def set2center_window(self):
+        # ดึงข้อมูลของจอภาพ
+        user32 = ctypes.windll.user32
+        screen_width = user32.GetSystemMetrics(0)
+        screen_height = user32.GetSystemMetrics(1)
+
+        # คำนวณตำแหน่งของหน้าต่างเพื่อให้อยู่ตรงกลาง
+        x = (screen_width - self.SCREEN_WIDTH) // 2
+        y = (screen_height - self.SCREEN_HEIGHT) // 2
+
+        # ตั้งค่าตำแหน่งของหน้าต่าง
+        hwnd = pygame.display.get_wm_info()['window']
+        user32.SetWindowPos(hwnd, 0, x, y, 0, 0, 0x0001)
 
     def pack_x(self, box_x: int) -> int:
         return self.__resize2x(box_x)
