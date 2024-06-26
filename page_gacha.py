@@ -20,7 +20,7 @@ def main(page_gacha_run: bool,
         elif var.btnExit.click(event):
             page_gacha_run = False
         elif var.btnRandom.click(event):
-            var.audio_gacha.play()
+            var.audio_gacha_efx.play()
             var.count_gacha += 1
             result = gacha_summon()
             var.result = f'You summon an {result}-rank character.'
