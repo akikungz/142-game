@@ -12,7 +12,7 @@ def main(page_gacha_run: bool,
     gacha_calculator = gacha.GachaCalculator(var.user_name)
     bannerName = "Rate-Up Debirun"
     # ตัวแปรในการนับจำนวนครั้ง
-    var.count_gacha = int(gacha_calculator.getUserDetail(var.user_name, bannerName)[0]['NumberRoll'])
+    var.count_gacha = 142 - int(gacha_calculator.getUserDetail(var.user_name, bannerName)[0]['NumberRoll'])
     # ----
     events = pygame.event.get()
     for event in events:
@@ -35,7 +35,7 @@ def main(page_gacha_run: bool,
     
     # text
     text_gacha_result = fw.Text(f'{var.result}', 30, var.colors.BLACK)
-    text_gacha_count = fw.Text(f'count : {var.count_gacha}', 30, var.colors.BLACK)
+    text_gacha_count = fw.Text(f'เหลืออีก {var.count_gacha} ครั้งจะการันตี', 30, var.colors.BLACK)
     text_gem = fw.Text(f'gem : {format(gacha_calculator.get_user_gem(var.user_name), ",")}', 30, var.colors.BLACK)
     
     screen.window.fill(var.colors.WHITE)
