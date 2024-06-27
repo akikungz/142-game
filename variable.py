@@ -7,6 +7,7 @@ import framework as fw
 class Variable():
     def __init__(self, pygame: pygame):
         # ตัวแปรใช้ทั่วไป
+        self.user_name = "admin"
         self.clock = pygame.time.Clock()
         # Colors
         self.colors = colors.Colors()
@@ -60,7 +61,7 @@ class Variable():
         self.result = 'Random Now!!'
         self.count_gacha = 0
         # ตัวแปรของปุ่ม
-        self.btnRandom = fw.Button('random', 20, self.colors.WHITE, self.colors.GOLD)
+        self.btnRandom = fw.Button('สุ่ม 142 gem', 20, self.colors.WHITE, self.colors.GOLD)
 
     def set_audio_volume(self):
         # audio_music

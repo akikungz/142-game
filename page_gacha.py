@@ -1,13 +1,19 @@
 import sys
 import pygame
-import random
 import framework as fw
 from variable import Variable
+import randomGacha as gacha
 
 def main(page_gacha_run: bool, 
          pygame: pygame, 
          var: Variable, 
          screen: object) -> bool:
+    # ดึงข้อมูลจาก db
+    gacha_calculator = gacha.GachaCalculator(var.user_name)
+    bannerName = "Rate-Up Debirun"
+    # ตัวแปรในการนับจำนวนครั้ง
+    var.count_gacha = int(gacha_calculator.getUserDetail(var.user_name, bannerName)[0]['NumberRoll'])
+    # ----
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
@@ -22,14 +28,18 @@ def main(page_gacha_run: bool,
         elif var.btnRandom.click(event):
             var.audio_gacha_efx.play()
             var.count_gacha += 1
-            result = gacha_summon()
-            var.result = f'You summon an {result}-rank character.'
+            result = gacha_calculator.multiple_pulls(bannerName, 1)
+            Name = result[0]['Name']
+            TierName = result[0]['TierName']
+            var.result = f'คุณสุ่มได้ {Name} ระดับ {TierName}'
     
     # text
     text_gacha_result = fw.Text(f'{var.result}', 30, var.colors.BLACK)
     text_gacha_count = fw.Text(f'count : {var.count_gacha}', 30, var.colors.BLACK)
+    text_gem = fw.Text(f'gem : {format(gacha_calculator.get_user_gem(var.user_name), ",")}', 30, var.colors.BLACK)
     
     screen.window.fill(var.colors.WHITE)
+    text_gem.show(screen.window, screen.pack_x(500), screen.pack_y(10) ,center_mode=True)
     text_gacha_count.show(screen.window, screen.pack_x(320), screen.pack_y(135) ,center_mode=True)
     text_gacha_result.show(screen.window, screen.pack_x(320), screen.pack_y(165) ,center_mode=True)
     var.btnRandom.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(210))
@@ -38,25 +48,3 @@ def main(page_gacha_run: bool,
     pygame.display.flip()
     var.clock.tick(30)
     return page_gacha_run
-
-
-def gacha_summon():
-    probabilities = {
-        "SSR": 142,   # ความน่าจะเป็น 1.42%
-        "SR": 1858,   # ความน่าจะเป็น 18.58%
-        "R": 3000,    # ความน่าจะเป็น 30%
-        "N": 5000    # ความน่าจะเป็น 50%
-    }
-
-    # สร้างตัวเลขสุ่มระหว่าง 1 ถึง 10,000
-    # ตัวเลขนี้จะใช้เป็นตัวตัดสินว่าเราจะได้ไอเทมระดับใด
-    roll = random.randint(1, 10_000)
-
-    # ตรวจสอบว่าตัวเลขสุ่มที่ได้อยู่ในช่วงความน่าจะเป็นของระดับใด
-    cumulative_probability = 0  # ตัวแปรเก็บความน่าจะเป็นสะสม
-    for rarity, probability in probabilities.items():
-        cumulative_probability += probability 
-        # ถ้าตัวเลขสุ่มน้อยกว่าหรือเท่ากับความน่าจะเป็นสะสม
-        # แสดงว่าเราสุ่มได้ไอเทมระดับนั้น
-        if roll <= cumulative_probability:
-            return rarity
