@@ -61,7 +61,7 @@ class Variable():
         self.result = 'Random Now!!'
         self.count_gacha = 0
         # ตัวแปรของปุ่ม
-        self.btnRandom = fw.Button('สุ่ม 142 gem', 20, self.colors.WHITE, self.colors.GOLD)
+        self.btnRandom = fw.Button('สุ่ม 142 gem', 20, self.colors.WHITE, self.colors.GREEN)
 
     def set_audio_volume(self):
         # audio_music

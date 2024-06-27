@@ -12,7 +12,7 @@ def main(page_gacha_run: bool,
     gacha_calculator = gacha.GachaCalculator(var.user_name)
     bannerName = "Rate-Up Debirun"
     # ตัวแปรในการนับจำนวนครั้ง
-    var.count_gacha = 142 - int(gacha_calculator.getUserDetail(var.user_name, bannerName)[0]['NumberRoll'])
+    var.count_gacha = 142 - int(gacha_calculator.getUserDetail(var.user_name, bannerName)['NumberRoll'])
     # ----
     events = pygame.event.get()
     for event in events:
@@ -26,12 +26,21 @@ def main(page_gacha_run: bool,
         elif var.btnExit.click(event):
             page_gacha_run = False
         elif var.btnRandom.click(event):
-            var.audio_gacha_efx.play()
-            var.count_gacha += 1
             result = gacha_calculator.multiple_pulls(bannerName, 1)
-            Name = result[0]['Name']
-            TierName = result[0]['TierName']
-            var.result = f'คุณสุ่มได้ {Name} ระดับ {TierName}'
+            item = result['Result']
+            error = result['Error']
+            if error is None:
+                var.audio_gacha_efx.play()
+                for i in range(len(item)):
+                    Name = item[i]['Name']
+                    TierName = item[i]['TierName']
+                    var.result = f'คุณสุ่มได้ {Name} ระดับ {TierName}'
+
+    # กำหนดการแสดงผลปุ่ม
+    if gacha_calculator.checkGem(1, return_gem=False):
+        var.btnRandom.change_color_button(var.colors.GREEN)
+    else:
+        var.btnRandom.change_color_button(var.colors.RED)
     
     # text
     text_gacha_result = fw.Text(f'{var.result}', 30, var.colors.BLACK)

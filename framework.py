@@ -162,10 +162,13 @@ class Button(FontSystem):
         
         screen_draw.blit(text_surface, text_rect)
 
+    def change_color_button(self, color_button: tuple):
+        self.color_button = color_button
+
     def set_button(self, 
                    width_button=1,
                    height_button=1,
-                   x=1, y=1,):
+                   x=1, y=1):
         self.button = pygame.Rect(x, y, width_button, height_button)
     
     def click(self, event):
