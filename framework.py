@@ -127,9 +127,12 @@ class Button(FontSystem):
                  font_color: tuple, 
                  color_button: tuple, 
                  radius=20, 
+                 name_button=None, 
                  font_path=None):
         super().__init__(font_path, font_size, font_color)
         self.text = text
+        if name_button is None:
+            self.name_button = self.text
         self.text_surface = self.font.render(text, True, font_color)
         self.set_button()
         self.color_button = color_button
@@ -193,8 +196,9 @@ class ImageButton(Button):
                  font_size: int, 
                  font_color: tuple, 
                  image_path: str, 
+                 name_button=None,
                  font_path=None):
-        super().__init__(text, font_size, font_color, (0, 0, 0), 0, font_path)  # ส่งค่าที่ไม่ใช้ไปยัง super
+        super().__init__(text, font_size, font_color, (0, 0, 0), 0, name_button, font_path)  # ส่งค่าที่ไม่ใช้ไปยัง super
         self.image = pygame.image.load(image_path).convert_alpha()
         self.original_image = self.image.copy()  # เก็บสำเนาภาพเดิมเพื่อการทำให้สว่างขึ้น
         self.image_rect = self.image.get_rect()

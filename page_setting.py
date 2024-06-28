@@ -32,7 +32,7 @@ def main(page_setting_run: bool,
             else:
                 w, h = map(int, selected_option.split('x'))
                 screen.set_screen(w, h)
-        elif var.btnExit.click(event):
+        elif var.btnBack.click(event):
             page_setting_run = False
         elif var.btnReduce_1_music.click(event):
             var.volume_down_music(1)
@@ -73,7 +73,7 @@ def main(page_setting_run: bool,
     var.btnIncrease_10_efx.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(420), screen.pack_y(190))
     
     var.dropdownScreen.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(300), screen.pack_y(130))
-    var.btnExit.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(520), screen.pack_y(10))
+    var.btnBack.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(10), screen.pack_y(10))
 
     pygame.display.flip()
     var.clock.tick(30)

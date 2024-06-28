@@ -10,9 +10,7 @@ def main(page_gacha_run: bool,
          screen: object) -> bool:
     # ดึงข้อมูลจาก db
     gacha_calculator = gacha.GachaCalculator(var.user_name)
-    bannerName = "Rate-Up Debirun"
-    # ตัวแปรในการนับจำนวนครั้ง
-    var.count_gacha = 142 - int(gacha_calculator.getUserDetail(var.user_name, bannerName)['NumberRoll'])
+    var.banner_gacha_name = "Rate-Up Debirun"
     # ----
     events = pygame.event.get()
     for event in events:
@@ -23,36 +21,79 @@ def main(page_gacha_run: bool,
             if event.key == pygame.K_ESCAPE:  # Press ESC to exit
                 pygame.quit()
                 sys.exit()
-        elif var.btnExit.click(event):
+        elif var.btnBack.click(event):
             page_gacha_run = False
-        elif var.btnRandom.click(event):
-            result = gacha_calculator.multiple_pulls(bannerName, 1)
+        elif var.btn_1roll.click(event):
+            result = gacha_calculator.multiple_pulls(var.banner_gacha_name, 1)
             item = result['Result']
             error = result['Error']
+            if error is None:
+                var.audio_gacha_efx.play()
+                Name = item[0]['Name']
+                TierName = item[0]['TierName']
+                var.result1 = f'คุณสุ่มได้ {Name} ระดับ {TierName}'
+                var.result2 = ''
+                var.result3 = ''
+                var.result4 = ''
+                var.result5 = ''
+        elif var.btn_10roll.click(event):
+            var.result1 = ''
+            var.result2 = ''
+            var.result3 = ''
+            var.result4 = ''
+            var.result5 = ''
+            result = gacha_calculator.multiple_pulls(var.banner_gacha_name, 10)
+            item = result['Result']
+            error = result['Error']
+            result = ''
             if error is None:
                 var.audio_gacha_efx.play()
                 for i in range(len(item)):
                     Name = item[i]['Name']
                     TierName = item[i]['TierName']
-                    var.result = f'คุณสุ่มได้ {Name} ระดับ {TierName}'
+                    if i < 2:
+                        var.result1 += f'คุณสุ่มได้ {Name} ระดับ {TierName}, '
+                    elif i < 4:
+                        var.result2 += f'คุณสุ่มได้ {Name} ระดับ {TierName}, '
+                    elif i < 6:
+                        var.result3 += f'คุณสุ่มได้ {Name} ระดับ {TierName}, '
+                    elif i < 8:
+                        var.result4 += f'คุณสุ่มได้ {Name} ระดับ {TierName}, '
+                    elif i < 9:
+                        var.result5 += f'คุณสุ่มได้ {Name} ระดับ {TierName}, '
+                    else:
+                        var.result5 += f'คุณสุ่มได้ {Name} ระดับ {TierName}'
 
-    # กำหนดการแสดงผลปุ่ม
+    # กำหนดการแสดงผลปุ่ม 1 โรล
     if gacha_calculator.checkGem(1, return_gem=False):
-        var.btnRandom.change_color_button(var.colors.GREEN)
+        var.btn_1roll.change_color_button(var.colors.GREEN)
     else:
-        var.btnRandom.change_color_button(var.colors.RED)
+        var.btn_1roll.change_color_button(var.colors.RED)
+
+    # กำหนดการแสดงผลปุ่ม 10 โรล
+    if gacha_calculator.checkGem(10, return_gem=False):
+        var.btn_10roll.change_color_button(var.colors.GREEN)
+    else:
+        var.btn_10roll.change_color_button(var.colors.RED)
     
     # text
-    text_gacha_result = fw.Text(f'{var.result}', 30, var.colors.BLACK)
-    text_gacha_count = fw.Text(f'เหลืออีก {var.count_gacha} ครั้งจะการันตี', 30, var.colors.BLACK)
+    text_gacha_result1 = fw.Text(f'{var.result1}', 30, var.colors.BLACK)
+    text_gacha_result2 = fw.Text(f'{var.result2}', 30, var.colors.BLACK)
+    text_gacha_result3 = fw.Text(f'{var.result3}', 30, var.colors.BLACK)
+    text_gacha_result4 = fw.Text(f'{var.result4}', 30, var.colors.BLACK)
+    text_gacha_result5 = fw.Text(f'{var.result5}', 30, var.colors.BLACK)
     text_gem = fw.Text(f'gem : {format(gacha_calculator.get_user_gem(var.user_name), ",")}', 30, var.colors.BLACK)
     
     screen.window.fill(var.colors.WHITE)
     text_gem.show(screen.window, screen.pack_x(500), screen.pack_y(10) ,center_mode=True)
-    text_gacha_count.show(screen.window, screen.pack_x(320), screen.pack_y(135) ,center_mode=True)
-    text_gacha_result.show(screen.window, screen.pack_x(320), screen.pack_y(165) ,center_mode=True)
-    var.btnRandom.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(210))
-    var.btnExit.show(screen.window, screen.width(160), screen.height(20), screen.pack_x(240), screen.pack_y(240))
+    text_gacha_result1.show(screen.window, screen.pack_x(320), screen.pack_y(135) ,center_mode=True)
+    text_gacha_result2.show(screen.window, screen.pack_x(320), screen.pack_y(165) ,center_mode=True)
+    text_gacha_result3.show(screen.window, screen.pack_x(320), screen.pack_y(195) ,center_mode=True)
+    text_gacha_result4.show(screen.window, screen.pack_x(320), screen.pack_y(225) ,center_mode=True)
+    text_gacha_result5.show(screen.window, screen.pack_x(320), screen.pack_y(255) ,center_mode=True)
+    var.btn_1roll.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(420), screen.pack_y(320))
+    var.btn_10roll.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(530), screen.pack_y(320))
+    var.btnBack.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(10), screen.pack_y(10))
 
     pygame.display.flip()
     var.clock.tick(30)

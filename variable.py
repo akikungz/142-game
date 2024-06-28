@@ -19,7 +19,7 @@ class Variable():
         self.set_audio_volume()
         self.audio_background_music.play(-1)
         # ตัวแปรของปุ่ม
-        self.btnExit = fw.Button('ออก', 20, self.colors.WHITE, self.colors.RED)
+        self.btnBack = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnBack)
         
         self.init_page_main_variables()
         self.init_page_setting_variables()
@@ -37,7 +37,7 @@ class Variable():
         self.btnPlay = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnPlay)
         self.btnGacha = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnGacha)
         self.btnSetting = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnSetting)
-        self.btnExitImg = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnExitImg)
+        self.btnExit = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnExit)
         self.btnPrevious = fw.Button('<', 20, self.colors.WHITE, self.colors.DARK_BLUE)
         self.btnNext = fw.Button('>', 20, self.colors.WHITE, self.colors.DARK_BLUE)
 
@@ -57,11 +57,17 @@ class Variable():
 
     def init_page_gacha_variables(self):
         # ตัวแปรหน้า page_gacha
+        # ชื่อของ banner ที่จะใช้สุ่ม
+        self.banner_gacha_name = ''
         # ตัวแปรข้อความ
-        self.result = 'Random Now!!'
-        self.count_gacha = 0
+        self.result1 = 'Random Now!!'
+        self.result2 = ''
+        self.result3 = ''
+        self.result4 = ''
+        self.result5 = ''
         # ตัวแปรของปุ่ม
-        self.btnRandom = fw.Button('สุ่ม 142 gem', 20, self.colors.WHITE, self.colors.GREEN)
+        self.btn_1roll = fw.Button('สุ่ม 142 gem', 20, self.colors.WHITE, self.colors.GREEN)
+        self.btn_10roll = fw.Button('สุ่ม 1420 gem', 20, self.colors.WHITE, self.colors.GREEN)
 
     def set_audio_volume(self):
         # audio_music
