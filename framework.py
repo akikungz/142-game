@@ -348,28 +348,36 @@ class Dropdown(FontSystem):
     
 
 class ScrollableMenu:
-    def __init__(self, options, line_division = 5):
+    def __init__(self, options: list, fade_away=False, cut_frame=False, line_division=5):
         self.options = options
-        self.line_spacing = 0
-        self.line_division = line_division + 1
         self.obj_height = 0
         self.scroll_y = 0
         self.rect = None
+        # ใช้เก็บระยะห่างของแต่ละวัตถุ
+        self.line_spacing = 0
+        # ใช้สำหรับแบ่งอัตราส่วนในแต่ละแถว
+        self.line_division = line_division + 1
+        # ใช้เก็บตัวเลือกที่กำลังแสดงบนหน้าจอ
         self.visible_options = []
+        # กำหนดเป็น True หากต้องการให้ object ค่อย ๆ จางหายไป
+        self.fade_away = fade_away
+        # กำหนดให้ตัด object เมื่อ object เลยกรอบที่กำหนด
+        self.cut_frame = cut_frame
 
     def draw(self, screen_draw: pygame.Surface, 
-         width: int, height: int, 
-         x: int, y: int, 
-         line_spacing: int, 
-         show_area=False):
+             width: int, height: int, 
+             x: int, y: int, 
+             line_spacing: int, 
+             show_area=False):
         self.rect = pygame.Rect(x, y, width, height)
         self.line_spacing = line_spacing
         if show_area:
             pygame.draw.rect(screen_draw, (255, 255, 255), self.rect, 2)
 
-        # เก็บค่า clip rectangle ดั้งเดิมไว้
-        original_clip = screen_draw.get_clip()
-        screen_draw.set_clip(self.rect)
+        if self.cut_frame:
+            # เก็บค่า clip rectangle ดั้งเดิมไว้
+            original_clip = screen_draw.get_clip()
+            screen_draw.set_clip(self.rect)
         
         self.visible_options.clear()
 
@@ -392,10 +400,14 @@ class ScrollableMenu:
                 self._draw_option(temp_surface, option, self.rect.x, option_y, width, self.obj_height)
                 
                 # วาด temp_surface ลงบน screen_draw โดยใช้ clip rect ของเมนู
-                screen_draw.blit(temp_surface, (self.rect.x, option_y))
+                if self.fade_away:
+                    self._blit_with_fade(screen_draw, temp_surface, self.rect.x, option_y)
+                else:
+                    screen_draw.blit(temp_surface, (self.rect.x, option_y))
 
-        # คืนค่า clip rectangle เดิม
-        screen_draw.set_clip(original_clip)
+        if self.cut_frame:
+            # คืนค่า clip rectangle เดิม
+            screen_draw.set_clip(original_clip)
 
     def _draw_option(self, surface, option, option_x, option_y, width, height):
         x = 0
@@ -417,6 +429,24 @@ class ScrollableMenu:
         else:
             pygame.draw.rect(surface, (200, 200, 200), (x, y, width, height))
 
+    def _blit_with_fade(self, screen, surface, x, y):
+        menu_top = self.rect.y
+        menu_bottom = self.rect.y + self.rect.height
+        option_top = y
+        option_bottom = y + self.obj_height
+
+        # คำนวณ alpha
+        alpha = 255
+        if option_top < menu_top:
+            alpha = max(0, 255 - int((menu_top - option_top) / self.obj_height * 255))
+        elif option_bottom > menu_bottom:
+            alpha = max(0, 255 - int((option_bottom - menu_bottom) / self.obj_height * 255))
+
+        # ตั้งค่า alpha ของ surface
+        surface.set_alpha(alpha)
+
+        # วาดภาพ
+        screen.blit(surface, (x, y))
 
     def handle_event(self, event):
         if self.rect is None:
