@@ -7,10 +7,9 @@ import randomGacha as gacha
 def main(page_gacha_run: bool, 
          pygame: pygame, 
          var: Variable, 
-         screen: object) -> bool:
+         screen: fw.Screen) -> bool:
     # ดึงข้อมูลจาก db
     gacha_calculator = gacha.GachaCalculator(var.user_name)
-    var.banner_gacha_name = "Rate-Up Debirun"
     # ----
     events = pygame.event.get()
     for event in events:
@@ -64,6 +63,15 @@ def main(page_gacha_run: bool,
                     else:
                         var.result5 += f'คุณสุ่มได้ {Name} ระดับ {TierName}'
 
+        click_scroll_gacha = var.scroll_gacha.handle_event(event)
+        if click_scroll_gacha is not None:
+            var.banner_gacha_name = click_scroll_gacha
+            var.result1 = ''
+            var.result2 = f'กดเพื่อสุ่มตู้ {var.banner_gacha_name} ได้เลย!!!'
+            var.result3 = ''
+            var.result4 = ''
+            var.result5 = ''
+
     # กำหนดการแสดงผลปุ่ม 1 โรล
     if gacha_calculator.checkGem(1, return_gem=False):
         var.btn_1roll.change_color_button(var.colors.GREEN)
@@ -86,13 +94,16 @@ def main(page_gacha_run: bool,
     
     screen.window.fill(var.colors.WHITE)
     text_gem.show(screen.window, screen.pack_x(500), screen.pack_y(10) ,center_mode=True)
-    text_gacha_result1.show(screen.window, screen.pack_x(320), screen.pack_y(105) ,center_mode=True)
-    text_gacha_result2.show(screen.window, screen.pack_x(320), screen.pack_y(135) ,center_mode=True)
-    text_gacha_result3.show(screen.window, screen.pack_x(320), screen.pack_y(165) ,center_mode=True)
-    text_gacha_result4.show(screen.window, screen.pack_x(320), screen.pack_y(195) ,center_mode=True)
-    text_gacha_result5.show(screen.window, screen.pack_x(320), screen.pack_y(225) ,center_mode=True)
+    text_gacha_result1.show(screen.window, screen.pack_x(400), screen.pack_y(105) ,center_mode=True)
+    text_gacha_result2.show(screen.window, screen.pack_x(400), screen.pack_y(135) ,center_mode=True)
+    text_gacha_result3.show(screen.window, screen.pack_x(400), screen.pack_y(165) ,center_mode=True)
+    text_gacha_result4.show(screen.window, screen.pack_x(400), screen.pack_y(195) ,center_mode=True)
+    text_gacha_result5.show(screen.window, screen.pack_x(400), screen.pack_y(225) ,center_mode=True)
     var.btn_1roll.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(400), screen.pack_y(300))
     var.btn_10roll.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(510), screen.pack_y(300))
+    
+    var.scroll_gacha.show(screen.window, screen.width(160), screen.height(screen.MAX_Y), screen.pack_x(15), screen.pack_y(0), screen.height(20))
+
     var.btnBack.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(10), screen.pack_y(10))
 
     pygame.display.flip()

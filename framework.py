@@ -134,6 +134,8 @@ class Button(FontSystem):
         self.text = text
         if name_button is None:
             self.name_button = self.text
+        else:
+            self.name_button = name_button
         self.text_surface = self.font.render(text, True, font_color)
         self.set_button()
         self.color_button = color_button
@@ -368,7 +370,7 @@ class ScrollableMenu:
         # กำหนดให้ตัด object เมื่อ object เลยกรอบที่กำหนด
         self.cut_frame = cut_frame
 
-    def draw(self, 
+    def show(self, 
              screen_draw: pygame.Surface, 
              width: int, height: int, 
              x: int, y: int, 
@@ -402,7 +404,7 @@ class ScrollableMenu:
                 temp_surface = pygame.Surface((width, self.obj_height), pygame.SRCALPHA)
                 temp_surface.fill((0, 0, 0, 0))  # ทำให้พื้นหลังโปร่งใส
                 
-                self._draw_option(temp_surface, option, self.rect.x, option_y, width, self.obj_height)
+                self._show_option(temp_surface, option, self.rect.x, option_y, width, self.obj_height)
                 
                 # วาด temp_surface ลงบน screen_draw โดยใช้ clip rect ของเมนู
                 if self.fade_away:
@@ -414,7 +416,7 @@ class ScrollableMenu:
             # คืนค่า clip rectangle เดิม
             screen_draw.set_clip(original_clip)
 
-    def _draw_option(self, surface, option, option_x, option_y, width, height):
+    def _show_option(self, surface, option, option_x, option_y, width, height):
         x = 0
         y = 0
         if isinstance(option, (Button, ImageButton)):

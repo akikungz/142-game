@@ -16,10 +16,10 @@ btnGacha = os.path.join(base_path, "Assets", "picture", "button", "btnGacha.png"
 btnSetting = os.path.join(base_path, "Assets", "picture", "button", "btnSetting.png")
 btnExit = os.path.join(base_path, "Assets", "picture", "button", "btnExit.png")
 btnBack = os.path.join(base_path, "Assets", "picture", "button", "btnBack.png")
-# gacha benner
-banner_AMI = os.path.join(base_path, "Assets", "picture", "gacha",  "benner", "banner_AMI.png")
-banner_Ashyra = os.path.join(base_path, "Assets", "picture", "gacha",  "benner", "banner_Ashyra.png")
-banner_Debirun = os.path.join(base_path, "Assets", "picture", "gacha",  "benner", "banner_Debirun.png")
-banner_MildR = os.path.join(base_path, "Assets", "picture", "gacha",  "benner", "banner_Mild-R.png")
-banner_Tsururu = os.path.join(base_path, "Assets", "picture", "gacha",  "benner", "banner_Tsururu.png")
-banner_Xonebu = os.path.join(base_path, "Assets", "picture", "gacha",  "benner", "banner_Xonebu.png")
+# gacha banner
+banner_AMI = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_AMI.png")
+banner_Ashyra = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_Ashyra.png")
+banner_Debirun = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_Debirun.png")
+banner_MildR = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_Mild-R.png")
+banner_Tsururu = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_Tsururu.png")
+banner_Xonebu = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_Xonebu.png")

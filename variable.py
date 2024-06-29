@@ -58,14 +58,22 @@ class Variable():
     def init_page_gacha_variables(self):
         # ตัวแปรหน้า page_gacha
         # ชื่อของ banner ที่จะใช้สุ่ม
-        self.banner_gacha_name = ''
+        self.banner_gacha_name = 'Rate-Up Debirun'
         # ตัวแปรข้อความ
         self.result1 = ''
-        self.result2 = 'Random Now!!'
+        self.result2 = f'กดเพื่อสุ่มตู้ {self.banner_gacha_name} ได้เลย!!!'
         self.result3 = ''
         self.result4 = ''
         self.result5 = ''
         # ตัวแปรของปุ่ม
+        options = []
+        options.append(fw.ImageButton('', 0, self.colors.WHITE, get_image.banner_AMI, name_button='Rate-Up Beta AMI'))
+        options.append(fw.ImageButton('', 0, self.colors.WHITE, get_image.banner_Ashyra, name_button='Rate-Up T-Reina Ashyra'))
+        options.append(fw.ImageButton('', 0, self.colors.WHITE, get_image.banner_Debirun, name_button='Rate-Up Debirun'))
+        options.append(fw.ImageButton('', 0, self.colors.WHITE, get_image.banner_MildR, name_button='Rate-Up Mild-R'))
+        options.append(fw.ImageButton('', 0, self.colors.WHITE, get_image.banner_Tsururu, name_button='Rate-Up Kumoku Tsururu'))
+        options.append(fw.ImageButton('', 0, self.colors.WHITE, get_image.banner_Xonebu, name_button='Rate-Up Xonebu X’thulhu'))
+        self.scroll_gacha = fw.ScrollableMenu(options, True, False, 4)
         self.btn_1roll = fw.Button('สุ่ม 142 gem', 20, self.colors.WHITE, self.colors.GREEN)
         self.btn_10roll = fw.Button('สุ่ม 1420 gem', 20, self.colors.WHITE, self.colors.GREEN)
 
