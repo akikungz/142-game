@@ -348,7 +348,11 @@ class Dropdown(FontSystem):
     
 
 class ScrollableMenu:
-    def __init__(self, options: list, fade_away=False, cut_frame=False, line_division=5):
+    def __init__(self, 
+                 options: list, 
+                 fade_away=False, 
+                 cut_frame=False, 
+                 line_division=5):
         self.options = options
         self.obj_height = 0
         self.scroll_y = 0
@@ -364,7 +368,8 @@ class ScrollableMenu:
         # กำหนดให้ตัด object เมื่อ object เลยกรอบที่กำหนด
         self.cut_frame = cut_frame
 
-    def draw(self, screen_draw: pygame.Surface, 
+    def draw(self, 
+             screen_draw: pygame.Surface, 
              width: int, height: int, 
              x: int, y: int, 
              line_spacing: int, 
@@ -461,7 +466,6 @@ class ScrollableMenu:
                     return option.name_button
                 
         return None
-
 
     def _get_max_scroll(self):
         option_height = (self.obj_height + self.line_spacing)
