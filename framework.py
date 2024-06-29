@@ -388,7 +388,7 @@ class ScrollableMenu:
             else:
                 self.obj_height = option.height
 
-            option_y = self.rect.y + i * (self.obj_height + self.line_spacing) - self.scroll_y
+            option_y = self.rect.y + (i+1) * (self.obj_height + self.line_spacing) - self.scroll_y
 
             # คำนวณขอบเขตของ option ที่จะแสดงผล
             if option_y + self.obj_height > self.rect.y and option_y < self.rect.y + self.rect.height:
@@ -429,24 +429,17 @@ class ScrollableMenu:
         else:
             pygame.draw.rect(surface, (200, 200, 200), (x, y, width, height))
 
-    def _blit_with_fade(self, screen, surface, x, y):
-        menu_top = self.rect.y
-        menu_bottom = self.rect.y + self.rect.height
-        option_top = y
-        option_bottom = y + self.obj_height
-
-        # คำนวณ alpha
-        alpha = 255
-        if option_top < menu_top:
-            alpha = max(0, 255 - int((menu_top - option_top) / self.obj_height * 255))
-        elif option_bottom > menu_bottom:
-            alpha = max(0, 255 - int((option_bottom - menu_bottom) / self.obj_height * 255))
-
-        # ตั้งค่า alpha ของ surface
-        surface.set_alpha(alpha)
-
-        # วาดภาพ
-        screen.blit(surface, (x, y))
+    def _blit_with_fade(self, screen_draw, temp_surface, x, y):
+        fade_height = self.rect.height // 6  # ความสูงของบริเวณที่เฟด
+        for i in range(temp_surface.get_height()):
+            alpha = 255
+            if y + i < self.rect.y + fade_height:
+                alpha = max(0, 255 - int(255 * (self.rect.y + fade_height - (y + i)) / fade_height))
+            elif y + i > self.rect.y + self.rect.height - fade_height:
+                alpha = max(0, 255 - int(255 * ((y + i) - (self.rect.y + self.rect.height - fade_height)) / fade_height))
+            line_surface = temp_surface.subsurface(pygame.Rect(0, i, temp_surface.get_width(), 1))
+            line_surface.set_alpha(alpha)
+            screen_draw.blit(line_surface, (x, y + i))
 
     def handle_event(self, event):
         if self.rect is None:
@@ -456,8 +449,7 @@ class ScrollableMenu:
             mouse_pos = pygame.mouse.get_pos()
             if self.rect.collidepoint(mouse_pos):
                 self.scroll_y -= event.y * 10  # ปรับความเร็วการเลื่อนได้ตามต้องการ
-                max_scroll = (len(self.options) * (self.obj_height + self.line_spacing)) - self.rect.height
-                self.scroll_y = max(0, min(self.scroll_y, max_scroll))
+                self.scroll_y = self._get_max_scroll()
 
         for option, option_rect in self.visible_options:
             # ใช้งานได้กับ option ประเภทปุ่มเท่านั้นถึงจะมีเมธอด click
@@ -472,6 +464,8 @@ class ScrollableMenu:
 
 
     def _get_max_scroll(self):
-        option_height = self.rect.height // len(self.options)
-        total_height = (option_height + self.line_spacing) * len(self.options)
-        return max(0, total_height - self.rect.height)
+        option_height = (self.obj_height + self.line_spacing)
+        # จำนวนทั้งของ option บวก 2 เพื่อไม่ให้ส่วนหัวและท้ายติดกับขอบจนเกินไป
+        quantity_option = (len(self.options) + 2)
+        max_scroll = (quantity_option * option_height) - self.rect.height
+        return max(0, min(self.scroll_y, max_scroll))
