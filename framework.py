@@ -357,8 +357,12 @@ class ScrollableMenu:
                  line_division=5):
         self.options = options
         self.obj_height = 0
-        self.scroll_y = 0
         self.rect = None
+        # เก็บค่า True เมื่อเมาส์ถูกกด
+        self.mouse_key_down = False
+        # ตัวแปรในการเลื่อน
+        self.scroll_y = 0
+        self.speed_scroll = 10
         # ใช้เก็บระยะห่างของแต่ละวัตถุ
         self.line_spacing = 0
         # ใช้สำหรับแบ่งอัตราส่วนในแต่ละแถว
@@ -376,7 +380,9 @@ class ScrollableMenu:
              x: int, y: int, 
              line_spacing: int, 
              show_area=False):
+        # กำหนด rect ของ ScrollableMenu
         self.rect = pygame.Rect(x, y, width, height)
+        # กำหนดระยะห่างวัตถุ
         self.line_spacing = line_spacing
         if show_area:
             pygame.draw.rect(screen_draw, (255, 255, 255), self.rect, 2)
@@ -411,6 +417,9 @@ class ScrollableMenu:
                     self._blit_with_fade(screen_draw, temp_surface, self.rect.x, option_y)
                 else:
                     screen_draw.blit(temp_surface, (self.rect.x, option_y))
+
+        # กำหนดความเร็วในการเลื่อนตามความสูงเศษ 1 ส่วน 4 ของ object 
+        self.speed_scroll = max(self.speed_scroll, (self.obj_height // 4))
 
         if self.cut_frame:
             # คืนค่า clip rectangle เดิม
@@ -452,10 +461,19 @@ class ScrollableMenu:
         if self.rect is None:
             return None
 
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.mouse_key_down = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.mouse_key_down = False
+        elif event.type == pygame.MOUSEMOTION and self.mouse_key_down:
+            self.scroll_y -= event.rel[1]  # เลื่อนตามการเคลื่อนที่ของเมาส์ในแกน Y
+            self.scroll_y = self._get_max_scroll()
+        
         if event.type == pygame.MOUSEWHEEL:
             mouse_pos = pygame.mouse.get_pos()
             if self.rect.collidepoint(mouse_pos):
-                self.scroll_y -= event.y * 10  # ปรับความเร็วการเลื่อนได้ตามต้องการ
+                self.scroll_y -= event.y * self.speed_scroll  # ปรับความเร็วการเลื่อนได้ตามต้องการ
                 self.scroll_y = self._get_max_scroll()
 
         for option, option_rect in self.visible_options:
