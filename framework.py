@@ -86,6 +86,8 @@ class FontSystem():
             self.font_path = self.__get_font()
         else:
             self.font_path = font_path
+        # สมมติว่าเราออกแบบ UI สำหรับความสูง 720 pixels
+        self.standard_window_size = 720
         self.base_font_size = font_size  # เก็บขนาด font เริ่มต้น
         self.font_size = font_size
         self.font_color = font_color
@@ -100,8 +102,7 @@ class FontSystem():
         window_height = window.get_height()
         
         # คำนวณขนาด font ใหม่ตามสัดส่วนของความสูงหน้าจอ
-        # สมมติว่าเราออกแบบ UI สำหรับความสูง 720 pixels
-        scale_factor = window_height / 720
+        scale_factor = window_height / self.standard_window_size
         new_font_size = int(self.base_font_size * scale_factor)
         
         # ถ้าขนาด font เปลี่ยน ให้สร้าง font ใหม่
@@ -251,6 +252,8 @@ class Text(FontSystem):
         super().__init__(font_path, font_size, font_color)
         # สร้างออบเจกต์ Text สำหรับแสดงข้อความบนหน้าจอ
         self.text = text_default
+        # ตรวจสอบความสูงของออบเจกต์
+        self.height = self.font.get_height()
 
     def show(self, 
              screen_draw: pygame.Surface, 
@@ -342,3 +345,103 @@ class Dropdown(FontSystem):
                         self.__active = False
         # ส่งคืนค่า False เมื่อไม่มีการเลือกตัวเลือกใด ๆ
         return False
+    
+
+class ScrollableMenu:
+    def __init__(self, options, line_division = 5):
+        self.options = options
+        self.line_spacing = 0
+        self.line_division = line_division + 1
+        self.obj_height = 0
+        self.scroll_y = 0
+        self.rect = None
+        self.visible_options = []
+
+    def draw(self, screen_draw: pygame.Surface, 
+         width: int, height: int, 
+         x: int, y: int, 
+         line_spacing: int, 
+         show_area=False):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.line_spacing = line_spacing
+        if show_area:
+            pygame.draw.rect(screen_draw, (255, 255, 255), self.rect, 2)
+
+        # เก็บค่า clip rectangle ดั้งเดิมไว้
+        original_clip = screen_draw.get_clip()
+        screen_draw.set_clip(self.rect)
+        
+        self.visible_options.clear()
+
+        for i, option in enumerate(self.options):
+            if not hasattr(option, 'height'):
+                # แบ่งอัตราส่วนในแต่ละแถว
+                self.obj_height = height // self.line_division
+            else:
+                self.obj_height = option.height
+
+            option_y = self.rect.y + i * (self.obj_height + self.line_spacing) - self.scroll_y
+
+            # คำนวณขอบเขตของ option ที่จะแสดงผล
+            if option_y + self.obj_height > self.rect.y and option_y < self.rect.y + self.rect.height:
+                
+                # สร้าง surface ชั่วคราวที่โปร่งใส
+                temp_surface = pygame.Surface((width, self.obj_height), pygame.SRCALPHA)
+                temp_surface.fill((0, 0, 0, 0))  # ทำให้พื้นหลังโปร่งใส
+                
+                self._draw_option(temp_surface, option, self.rect.x, option_y, width, self.obj_height)
+                
+                # วาด temp_surface ลงบน screen_draw โดยใช้ clip rect ของเมนู
+                screen_draw.blit(temp_surface, (self.rect.x, option_y))
+
+        # คืนค่า clip rectangle เดิม
+        screen_draw.set_clip(original_clip)
+
+    def _draw_option(self, surface, option, option_x, option_y, width, height):
+        x = 0
+        y = 0
+        if isinstance(option, (Button, ImageButton)):
+            # แก้ไขขนาดหน้าต่างมาตรฐานให้พอดีกลับขนาดของปุ่ม
+            option.standard_window_size = height * 2
+            # แสดงผลปุ่มตาม surface ปัจจุบัน
+            # rect ของ ปุ่มจะถูกเปลี่ยนไปตาม surface ไม่ใช่ตำแหน่งจริง ๆ ของหน้าจอ
+            option.show(surface, width, height, x, y)
+            # กำหนดตำแหน่งจริง ๆ บนหน้าจอของ option
+            option_rect = pygame.Rect(option_x, option_y, width, self.obj_height)  # กำหนดตำแหน่ง rect
+            # บันทึกตัวเลือกที่แสดง ณ ขณะนั้น เพื่อจดจำตำแหน่งจริง ๆ ของปุ่ม
+            self.visible_options.append((option, option_rect))
+        elif isinstance(option, Text):
+            # แก้ไขขนาดหน้าต่างมาตรฐานให้พอดีกลับขนาดของตัวหนังสือ
+            option.standard_window_size = height * 2
+            option.show(surface, (width // 2), y, center_mode=True)
+        else:
+            pygame.draw.rect(surface, (200, 200, 200), (x, y, width, height))
+
+
+    def handle_event(self, event):
+        if self.rect is None:
+            return None
+
+        if event.type == pygame.MOUSEWHEEL:
+            mouse_pos = pygame.mouse.get_pos()
+            if self.rect.collidepoint(mouse_pos):
+                self.scroll_y -= event.y * 10  # ปรับความเร็วการเลื่อนได้ตามต้องการ
+                max_scroll = (len(self.options) * (self.obj_height + self.line_spacing)) - self.rect.height
+                self.scroll_y = max(0, min(self.scroll_y, max_scroll))
+
+        for option, option_rect in self.visible_options:
+            # ใช้งานได้กับ option ประเภทปุ่มเท่านั้นถึงจะมีเมธอด click
+            if hasattr(option, 'click'):
+                # เปลี่ยน rect ของ ปุ่มให้เป็น ตำแหน่งจริงบนหน้าจอ
+                option.button = option_rect
+                if option.click(event):
+                    # ส่งคือชื่อปุ่มที่กำลังถูกคลิ๊ก
+                    return option.name_button
+                
+        return None
+
+
+    def _get_max_scroll(self):
+        option_height = self.rect.height // len(self.options)
+        total_height = (option_height + self.line_spacing) * len(self.options)
+        return max(0, total_height - self.rect.height)

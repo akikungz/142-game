@@ -60,8 +60,8 @@ class Variable():
         # ชื่อของ banner ที่จะใช้สุ่ม
         self.banner_gacha_name = ''
         # ตัวแปรข้อความ
-        self.result1 = 'Random Now!!'
-        self.result2 = ''
+        self.result1 = ''
+        self.result2 = 'Random Now!!'
         self.result3 = ''
         self.result4 = ''
         self.result5 = ''

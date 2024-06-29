@@ -31,8 +31,8 @@ def main(page_gacha_run: bool,
                 var.audio_gacha_efx.play()
                 Name = item[0]['Name']
                 TierName = item[0]['TierName']
-                var.result1 = f'คุณสุ่มได้ {Name} ระดับ {TierName}'
-                var.result2 = ''
+                var.result1 = ''
+                var.result2 = f'คุณสุ่มได้ {Name} ระดับ {TierName}'
                 var.result3 = ''
                 var.result4 = ''
                 var.result5 = ''
@@ -86,13 +86,13 @@ def main(page_gacha_run: bool,
     
     screen.window.fill(var.colors.WHITE)
     text_gem.show(screen.window, screen.pack_x(500), screen.pack_y(10) ,center_mode=True)
-    text_gacha_result1.show(screen.window, screen.pack_x(320), screen.pack_y(135) ,center_mode=True)
-    text_gacha_result2.show(screen.window, screen.pack_x(320), screen.pack_y(165) ,center_mode=True)
-    text_gacha_result3.show(screen.window, screen.pack_x(320), screen.pack_y(195) ,center_mode=True)
-    text_gacha_result4.show(screen.window, screen.pack_x(320), screen.pack_y(225) ,center_mode=True)
-    text_gacha_result5.show(screen.window, screen.pack_x(320), screen.pack_y(255) ,center_mode=True)
-    var.btn_1roll.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(420), screen.pack_y(320))
-    var.btn_10roll.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(530), screen.pack_y(320))
+    text_gacha_result1.show(screen.window, screen.pack_x(320), screen.pack_y(105) ,center_mode=True)
+    text_gacha_result2.show(screen.window, screen.pack_x(320), screen.pack_y(135) ,center_mode=True)
+    text_gacha_result3.show(screen.window, screen.pack_x(320), screen.pack_y(165) ,center_mode=True)
+    text_gacha_result4.show(screen.window, screen.pack_x(320), screen.pack_y(195) ,center_mode=True)
+    text_gacha_result5.show(screen.window, screen.pack_x(320), screen.pack_y(225) ,center_mode=True)
+    var.btn_1roll.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(400), screen.pack_y(300))
+    var.btn_10roll.show(screen.window, screen.width(100), screen.height(20), screen.pack_x(510), screen.pack_y(300))
     var.btnBack.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(10), screen.pack_y(10))
 
     pygame.display.flip()
