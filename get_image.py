@@ -23,3 +23,6 @@ banner_Debirun = os.path.join(base_path, "Assets", "picture", "gacha",  "banner"
 banner_MildR = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_Mild-R.png")
 banner_Tsururu = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_Tsururu.png")
 banner_Xonebu = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_Xonebu.png")
+# Assets Background
+gem = os.path.join(base_path, "Assets", "picture", "background",  "gem.png")
+text_area = os.path.join(base_path, "Assets", "picture", "background",  "text_area.png")
