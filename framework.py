@@ -275,6 +275,52 @@ class Text(FontSystem):
         screen_draw.blit(text_surface, text_rect)
 
 
+class ImageText(Text):
+    def __init__(self, 
+                 text_default: str, 
+                 font_size: int, 
+                 font_color: tuple, 
+                 image_path: str, 
+                 font_path=None):
+        super().__init__(text_default, font_size, font_color, font_path)
+        self.image = pygame.image.load(image_path).convert_alpha()
+        self.image_rect = self.image.get_rect()
+
+    def show(self, 
+             screen_draw: pygame.Surface, 
+             x: int, y: int,
+             text=None, 
+             center_mode=False):
+        self.set_font_size(screen_draw)
+        if text is not None:
+            self.text = text
+
+        text_surface = self.font.render(self.text, True, self.font_color)
+        text_rect = text_surface.get_rect()
+
+        # กำหนดตำแหน่งของรูปภาพ
+        self.image_rect.topleft = (x, y)
+
+        # สร้าง Surface สำหรับข้อความที่มีขนาดเท่ากับกรอบรูป
+        text_background = pygame.Surface((self.image_rect.width, self.image_rect.height), pygame.SRCALPHA)
+        text_background.fill((0, 0, 0, 0))  # ทำให้พื้นหลังโปร่งใส
+
+        # กำหนดตำแหน่งของข้อความบนพื้นหลัง
+        if center_mode:
+            text_rect.center = (self.image_rect.width // 2, self.image_rect.height // 2)
+        else:
+            text_rect.topleft = (0, 0)
+
+        # วาดข้อความลงบนพื้นหลัง
+        text_background.blit(text_surface, text_rect)
+
+        # วาดรูปภาพลงบนหน้าจอ
+        screen_draw.blit(self.image, self.image_rect)
+
+        # วาดข้อความที่ไม่เกินกรอบรูปลงบนหน้าจอ
+        screen_draw.blit(text_background, (x, y))
+
+
 class Dropdown(FontSystem):
     def __init__(self, 
                  options: list, 
