@@ -3,6 +3,7 @@ import colors
 import get_image
 import get_audio
 import framework as fw
+import randomGacha as gacha
 
 class Variable():
     def __init__(self, pygame: pygame):
@@ -20,6 +21,9 @@ class Variable():
         self.audio_background_music.play(-1)
         # ตัวแปรของปุ่ม
         self.btnBack = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnBack)
+        # ภาพพื้นหลัง
+        self.bg_gem = fw.ImageText('', 0, (0, 0, 0), get_image.bg_gem)
+        self.bg_text_area = fw.ImageText('', 25, (0, 0, 0), get_image.bg_text_area)
         
         self.init_page_main_variables()
         self.init_page_setting_variables()
@@ -100,6 +104,16 @@ class Variable():
     def volume_down_efx(self, key):
         self.audio_volume_efx = max(0, self.audio_volume_efx - key)
         self.set_audio_volume()
+
+    def show_gem(self, screen: fw.Screen, pack_x: int = 540, pack_y: int = 20, width: int = 75, height: int = 15):
+        gacha_calculator = gacha.GachaCalculator(self.user_name)
+        x = screen.pack_x(pack_x)
+        y = screen.pack_y(pack_y)
+        width = screen.width(width)
+        height = screen.height(height)
+        gem_scale = screen.width(height + 1)
+        self.bg_text_area.show(screen.window, x, y, width, height, f'{format(gacha_calculator.get_user_gem(self.user_name), ",")}', center_mode=True)
+        self.bg_gem.show(screen.window, (x-(gem_scale-(gem_scale//8))), (y - (height//2)), gem_scale, gem_scale)
 
     def set_start(self):
         pass

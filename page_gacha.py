@@ -90,10 +90,9 @@ def main(page_gacha_run: bool,
     text_gacha_result3 = fw.Text(f'{var.result3}', 30, var.colors.BLACK)
     text_gacha_result4 = fw.Text(f'{var.result4}', 30, var.colors.BLACK)
     text_gacha_result5 = fw.Text(f'{var.result5}', 30, var.colors.BLACK)
-    text_gem = fw.Text(f'gem : {format(gacha_calculator.get_user_gem(var.user_name), ",")}', 30, var.colors.BLACK)
     
     screen.window.fill(var.colors.WHITE)
-    text_gem.show(screen.window, screen.pack_x(500), screen.pack_y(10) ,center_mode=True)
+    var.show_gem(screen)
     text_gacha_result1.show(screen.window, screen.pack_x(400), screen.pack_y(105) ,center_mode=True)
     text_gacha_result2.show(screen.window, screen.pack_x(400), screen.pack_y(135) ,center_mode=True)
     text_gacha_result3.show(screen.window, screen.pack_x(400), screen.pack_y(165) ,center_mode=True)

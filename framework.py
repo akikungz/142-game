@@ -284,11 +284,13 @@ class ImageText(Text):
                  font_path=None):
         super().__init__(text_default, font_size, font_color, font_path)
         self.image = pygame.image.load(image_path).convert_alpha()
+        self.original_image = self.image.copy()  # เก็บสำเนาภาพเดิมเพื่อการทำให้สว่างขึ้น
         self.image_rect = self.image.get_rect()
 
     def show(self, 
              screen_draw: pygame.Surface, 
              x: int, y: int,
+             width: int, height: int,
              text=None, 
              center_mode=False):
         self.set_font_size(screen_draw)
@@ -299,26 +301,22 @@ class ImageText(Text):
         text_rect = text_surface.get_rect()
 
         # กำหนดตำแหน่งของรูปภาพ
-        self.image_rect.topleft = (x, y)
+        self.image = pygame.transform.scale(self.original_image, (width, height))
+        self.image_rect = self.image.get_rect()
+        self.image_rect.x = x
+        self.image_rect.y = y
 
-        # สร้าง Surface สำหรับข้อความที่มีขนาดเท่ากับกรอบรูป
-        text_background = pygame.Surface((self.image_rect.width, self.image_rect.height), pygame.SRCALPHA)
-        text_background.fill((0, 0, 0, 0))  # ทำให้พื้นหลังโปร่งใส
-
-        # กำหนดตำแหน่งของข้อความบนพื้นหลัง
+        # กำหนดตำแหน่งของข้อความที่อยู่ใต้รูปภาพ
         if center_mode:
-            text_rect.center = (self.image_rect.width // 2, self.image_rect.height // 2)
+            text_rect.centerx = self.image_rect.centerx
+            text_rect.centery = self.image_rect.centery
         else:
-            text_rect.topleft = (0, 0)
+            text_rect.x = x
+            text_rect.centery = self.image_rect.centery
 
-        # วาดข้อความลงบนพื้นหลัง
-        text_background.blit(text_surface, text_rect)
-
-        # วาดรูปภาพลงบนหน้าจอ
+        # วาดรูปภาพและข้อความลงบนหน้าจอ
         screen_draw.blit(self.image, self.image_rect)
-
-        # วาดข้อความที่ไม่เกินกรอบรูปลงบนหน้าจอ
-        screen_draw.blit(text_background, (x, y))
+        screen_draw.blit(text_surface, text_rect)
 
 
 class Dropdown(FontSystem):
