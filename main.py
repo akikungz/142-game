@@ -4,6 +4,7 @@ import colors
 import variable
 import get_image
 import get_audio
+import page_play
 import page_setting
 import page_gacha
 import framework as fw
@@ -48,13 +49,16 @@ while True:
     
     screen.window.fill(var.colors.WHITE)
     var.text_name_game.show(screen.window, screen.pack_x(10), screen.pack_y(10))
-    var.text_version.show(screen.window, screen.pack_x(15), screen.pack_y(40), 'v.0.0.56')
+    var.text_version.show(screen.window, screen.pack_x(15), screen.pack_y(40), 'v.0.0.57')
     var.btnGacha.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(240))
     var.btnPlay.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(300))
     var.btnSetting.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(520), screen.pack_y(10))
     var.btnExit.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(10))
     pygame.display.flip()
     var.clock.tick(30)
+
+    while page_play_run:
+        page_play_run = page_play.main(page_play_run, pygame, var, screen)
 
     var.result2 = f'กดเพื่อสุ่มตู้ {var.banner_gacha_name} ได้เลย!!!'
     while page_gacha_run:
