@@ -377,12 +377,12 @@ class Dropdown(FontSystem):
                 else:
                     self.__hover_option = -1
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos):
+            if self.rect.collidepoint(event.pos) and event.button == 1:  # ตรวจสอบว่าเป็นปุ่มซ้าย
                 self.__active = not self.__active
             elif self.__active:
                 for i, option in enumerate(self.__options):
                     rect = pygame.Rect(self.rect.x, self.rect.y + (i+1) * self.rect.height, self.rect.width, self.rect.height)
-                    if rect.collidepoint(event.pos):
+                    if rect.collidepoint(event.pos) and event.button == 1:  # ตรวจสอบว่าเป็นปุ่มซ้าย
                         self.selected_option = option
                         self.__active = False
                         # ส่งคืนค่า True เมื่อมีการเลือกตัวเลือก
