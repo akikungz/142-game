@@ -16,6 +16,9 @@ btnGacha = os.path.join(base_path, "Assets", "picture", "button", "btnGacha.png"
 btnSetting = os.path.join(base_path, "Assets", "picture", "button", "btnSetting.png")
 btnExit = os.path.join(base_path, "Assets", "picture", "button", "btnExit.png")
 btnBack = os.path.join(base_path, "Assets", "picture", "button", "btnBack.png")
+btnPlayCard = os.path.join(base_path, "Assets", "picture", "button", "btnPlayCard.png")
+btnPlayAns = os.path.join(base_path, "Assets", "picture", "button", "btnPlayAns.png")
+btnPlayVsMons = os.path.join(base_path, "Assets", "picture", "button", "btnPlayVsMons.png")
 # gacha banner
 banner_AMI = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_AMI.png")
 banner_Ashyra = os.path.join(base_path, "Assets", "picture", "gacha",  "banner", "banner_Ashyra.png")
