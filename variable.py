@@ -26,6 +26,7 @@ class Variable():
         self.bg_text_area = fw.ImageText('', 25, (0, 0, 0), get_image.bg_text_area)
         
         self.init_page_paly_variables()
+        self.init_page_play_card_variables()
         self.init_page_main_variables()
         self.init_page_setting_variables()
         self.init_page_gacha_variables()
@@ -51,6 +52,12 @@ class Variable():
         self.btnPlayCard = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnPlayCard)
         self.btnPlayAns = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnPlayAns)
         self.btnPlayVsMons = fw.ImageButton('', 0, self.colors.WHITE, get_image.btnPlayVsMons)
+
+    def init_page_play_card_variables(self):
+        # ตัวแปรหน้า page_play_card
+        # ตัวแปรของรูป
+        self.card_images = [get_image.c_ami, get_image.c_ashy, get_image.c_bu, get_image.c_del, get_image.c_mild, get_image.c_suru]
+        self.back_image = get_image.back_card
 
     def init_page_setting_variables(self):
         # ตัวแปรหน้า page_setting
