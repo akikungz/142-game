@@ -56,8 +56,10 @@ class Variable():
     def init_page_play_card_variables(self):
         # ตัวแปรหน้า page_play_card
         # ตัวแปรของรูป
-        self.card_images = [get_image.c_ami, get_image.c_ashy, get_image.c_bu, get_image.c_del, get_image.c_mild, get_image.c_suru]
-        self.back_image = get_image.back_card
+        card_image_paths = [get_image.c_ami, get_image.c_ashy, get_image.c_bu, get_image.c_del, get_image.c_mild, get_image.c_suru]
+        back_image_path = get_image.back_card
+        self.card_images = [pygame.image.load(img).convert_alpha() for img in card_image_paths]
+        self.back_image = pygame.image.load(back_image_path).convert_alpha()
 
     def init_page_setting_variables(self):
         # ตัวแปรหน้า page_setting
