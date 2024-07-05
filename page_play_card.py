@@ -154,13 +154,13 @@ class MatchingGame:
         return all(card.is_matched for card in self.cards)
 
     def handle_events(self, event):
+        self.check_match()
         if self.initial_display:
             return
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             for card in self.cards:
                 if card.rect.collidepoint(event.pos):
                     self.flip_card(card)
-                    self.check_match()
                     break  # ออกจากลูปหลังจากพลิกการ์ดแล้ว
 
 # ฟังก์ชันหลักของเกม
