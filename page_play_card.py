@@ -99,7 +99,6 @@ class MatchingGame:
             # ถ้ามีการ์ดที่ถูกเลือก 2 ใบแล้ว และไม่มีการ์ดที่ match กันอยู่ เริ่มจับเวลา
             if len(self.selected_cards) == 2 and not self.matched_cards:
                 self.flip_time = pygame.time.get_ticks()
-                self.check_match()
 
     def update(self):
         current_time = pygame.time.get_ticks()
@@ -110,6 +109,7 @@ class MatchingGame:
                 for card in self.cards:
                     card.flip()
         
+        # สำหรับแสดงผลการ์ดให้หมุน
         for card in self.cards:
             card.update()
 
@@ -118,7 +118,7 @@ class MatchingGame:
             if current_time - self.match_time > self.match_display_time:
                 for card in self.matched_cards:
                     card.is_matched = True
-                self.matched_cards = []
+                self.matched_cards = self.matched_cards[2:]
                 self.selected_cards = [card for card in self.selected_cards if not card.is_matched]
 
         # ถ้ามีการ์ดที่เปิดอยู่ 2 ใบและไม่ตรงกัน ให้พลิกกลับหลังจาก 1 วินาที
@@ -135,7 +135,8 @@ class MatchingGame:
     def check_match(self):
         if len(self.selected_cards) == 2:
             if self.selected_cards[0].front_image == self.selected_cards[1].front_image:
-                self.matched_cards = self.selected_cards.copy()
+                for card in self.selected_cards:
+                    self.matched_cards.append(card)
                 self.match_time = pygame.time.get_ticks()
                 self.selected_cards = []
                 print("Match found!")
@@ -159,6 +160,7 @@ class MatchingGame:
             for card in self.cards:
                 if card.rect.collidepoint(event.pos):
                     self.flip_card(card)
+                    self.check_match()
                     break  # ออกจากลูปหลังจากพลิกการ์ดแล้ว
 
 # ฟังก์ชันหลักของเกม
