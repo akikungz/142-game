@@ -26,6 +26,7 @@ class Card():
             self.flip_progress = 0
 
     def update(self):
+        # ทำการหนุนการ์ดถ้า flip_progress < 180
         if self.flip_progress < 180:
             self.flip_progress += self.flip_speed
 
