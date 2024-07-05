@@ -15,6 +15,7 @@ class Card():
         self.front_image = front_image
         self.back_image = back_image
         self.rect = pygame.Rect(x, y, width, height)
+        # ตรวจสอบหากการ์ดเปิดอยู่จะเป็น True
         self.is_flipped = True
         self.is_matched = False
         self.flip_progress = 0
@@ -26,7 +27,7 @@ class Card():
             self.flip_progress = 0
 
     def update(self):
-        # ทำการหนุนการ์ดถ้า flip_progress < 180
+        # ทำการหมุนการ์ดถ้า flip_progress < 180
         if self.flip_progress < 180:
             self.flip_progress += self.flip_speed
 
@@ -41,6 +42,7 @@ class Card():
             angle = 180 - self.flip_progress
             image = self.front_image if self.is_flipped else self.back_image
 
+        # คำนวณขนาดของการ์ด
         scaled_width = int(self.rect.width * abs(math.cos(math.radians(angle))))
         scaled_image = pygame.transform.scale(image, (scaled_width, self.rect.height))
         screen.blit(scaled_image, (self.rect.x + (self.rect.width - scaled_width) // 2, self.rect.y))
