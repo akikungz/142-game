@@ -126,8 +126,8 @@ class Variable():
         x = screen.pack_x(pack_x)
         y = screen.pack_y(pack_y)
         width = screen.width(width)
+        gem_scale = screen.width(height * 2)
         height = screen.height(height)
-        gem_scale = screen.width(height + 1)
         self.bg_text_area.show(screen.window, x, y, width, height, f'{format(gacha_calculator.get_user_gem(self.user_name), ",")}', center_mode=True)
         self.bg_gem.show(screen.window, (x-(gem_scale-(gem_scale//8))), (y - (height//2)), gem_scale, gem_scale)
 
