@@ -49,6 +49,26 @@ class Card(pygame.sprite.Sprite):
         scaled_image = pygame.transform.scale(image, (scaled_width, self.rect.height))
         screen.blit(scaled_image, (self.rect.x + (self.rect.width - scaled_width) // 2, self.rect.y))
 
+
+class FlipTimer:
+    def __init__(self, card1: 'Card', card2: 'Card'):
+        self.card1 = card1
+        self.card2 = card2
+        self.timer = fw.TimeGame()
+
+    def should_flip(self):
+        return self.timer.check_elapsed_time(1)  # 1 วินาที
+
+    def flip_cards(self):
+        if not self.card1.is_matched:
+            self.card1.flip()
+        if not self.card2.is_matched:
+            self.card2.flip()
+
+    def contains_card(self, card: 'Card'):
+        return card == self.card1 or card == self.card2
+    
+
 # เพิ่มคลาส MatchingGame
 class MatchingGame:
     def __init__(self, 
@@ -66,12 +86,12 @@ class MatchingGame:
         # การ์ดทั้งหมด
         self.cards: pygame.sprite.Group[Card] = pygame.sprite.Group()
         # การ์ดที่กำลังถูกเลือกอยู่ หรือการ์ดที่เปิดอยู่ ณ ตอนนั้น
-        self.selected_cards: pygame.sprite.Group[Card] = pygame.sprite.Group()
+        self.selected_cards: list[Card] = []
         #  จับเวลาสำหรับจับเวลาการแสดงผลเริ่มต้น
         self.initial_display_timer = fw.TimeGame()
         self.initial_display = True
         # จับเวลาสำหรับการ flip กลับของแต่ละคู่
-        self.flip_timers: list[fw.TimeGame] = []
+        self.flip_timers: list[FlipTimer] = []
         # จับเวลาสำหรับการ match ของแต่ละคู่
         self.match_timers: list[fw.TimeGame] = []
         self.matched_cards: pygame.sprite.Group[Card] = pygame.sprite.Group()
@@ -94,15 +114,15 @@ class MatchingGame:
         for card in self.selected_cards:
             if not card.is_matched:
                 card.flip()
-        self.selected_cards.empty()
+        self.selected_cards.clear()
 
     def flip_card(self, card: Card):
         if not card.is_flipped and not card.is_matched:
             card.flip()
-            self.selected_cards.add(card)
-            # ถ้ามีการ์ดที่ถูกเลือก 2 ใบแล้ว และไม่มีการ์ดที่ match กันอยู่ เริ่มจับเวลา
-            if len(self.selected_cards) == 2 and len(self.matched_cards) == 0:
-                self.flip_timers.append(fw.TimeGame())
+            self.selected_cards.append(card)
+            
+            # ตรวจสอบการ match ทุกครั้งที่มีการเปิดการ์ดใหม่
+            self.check_match()
 
     def update(self):
         # เมื่อเริ่มเกมให้เปิดการ์ดทั้งหมดในระยะเวลาหนึ่งเพื่อให้ผู้เล่นจดจำการ์ด
@@ -126,43 +146,30 @@ class MatchingGame:
                         self.matched_cards.remove(card)
                 # ลบเวลาการ match ของการ์ดที่ได้ทำการจับคู่
                 self.match_timers.pop(i)
-                # สร้าง Group ชั่วคราวเพื่อเก็บการ์ดที่ไม่ถูก match
-                temp_selected_cards = pygame.sprite.Group()
-                for card in self.selected_cards:
-                    if not card.is_matched:
-                        temp_selected_cards.add(card)
                 # อัปเดตกลุ่มการ์ดที่ถูกเลือกด้วยการ์ดที่ไม่ถูก match
-                self.selected_cards = temp_selected_cards
+                self.selected_cards = [card for card in self.selected_cards if not card.is_matched]
         
-        # จัดการการ์ดที่เปิดอยู่ ถ้ามีการ์ดที่เปิดอยู่มากกว่า 2 ใบและไม่ตรงกัน ให้พลิกกลับหลังจาก 1 วินาที
-        if len(self.selected_cards) > 2:
-            # เก็บการ์ดที่เกิน 2 ใบลงในกลุ่ม selected_cards
-            cards_to_flip = list(self.selected_cards)[:-2]
-            for card in cards_to_flip:
-                if not card.is_matched:
-                    card.flip()
-                    self.selected_cards.remove(card)
-        # ถ้ามีการ์ดที่เปิดอยู่ 2 ใบและไม่มีการ์ดที่ match กัน
-        elif len(self.selected_cards) == 2:
-            for i, timer in enumerate(self.flip_timers[:]):
-                # ถ้าเวลาผ่านไปมากกว่า 1 วินาที ให้พลิกการ์ดกลับ
-                if timer.check_elapsed_time(1):  # 1 วินาที
-                    self.flip_back_cards()
-                    self.flip_timers.pop(i)
-
-
+        # จัดการการ์ดที่เปิดอยู่
+        for timer in self.flip_timers[:]:
+            if timer.should_flip():
+                timer.flip_cards()
+                self.flip_timers.remove(timer)
+                
     def check_match(self):
-        if len(self.selected_cards) == 2:
-            selected_cards_list = list(self.selected_cards)
-            if selected_cards_list[0].front_image == selected_cards_list[1].front_image:
-                for card in selected_cards_list:
-                    self.matched_cards.add(card)
+        while len(self.selected_cards) >= 2:
+            card1 = self.selected_cards[0]
+            card2 = self.selected_cards[1]
+            
+            if card1.front_image == card2.front_image:
+                self.matched_cards.add(card1)
+                self.matched_cards.add(card2)
                 self.match_timers.append(fw.TimeGame())
-                self.selected_cards.empty()
+                self.selected_cards = self.selected_cards[2:]  # ลบ 2 การ์ดแรกออก
                 print("Match found!")
             else:
+                self.flip_timers.append(FlipTimer(card1, card2))
+                self.selected_cards = self.selected_cards[2:]  # ลบ 2 การ์ดแรกออก
                 print("No match")
-
 
     def draw(self):
         for card in self.cards:
