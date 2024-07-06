@@ -6,14 +6,16 @@ from variable import Variable
 import random
 
 # เพิ่มคลาส Card
-class Card():
+class Card(pygame.sprite.Sprite):
     def __init__(self, 
                  front_image: pygame.Surface, 
                  back_image: pygame.Surface, 
                  x: int, y: int, 
                  width: int, height: int):
+        super().__init__()  # เรียกใช้ constructor ของคลาสแม่ (Sprite)
         self.front_image = front_image
         self.back_image = back_image
+        self.image = self.front_image  # ตั้งค่าภาพเริ่มต้นให้กับ sprite
         self.rect = pygame.Rect(x, y, width, height)
         # ตรวจสอบหากการ์ดเปิดอยู่จะเป็น True
         self.is_flipped = True
@@ -62,9 +64,10 @@ class MatchingGame:
         self.rows = rows
         self.cols = cols
         self.flip_time = 0
-        self.cards = []
+        # การ์ดทั้งหมด
+        self.cards: pygame.sprite.Group[Card] = pygame.sprite.Group()
         # การ์ดที่กำลังถูกเลือกอยู่ หรือการ์ดที่เปิดอยู่ ณ ตอนนั้น
-        self.selected_cards = []
+        self.selected_cards: pygame.sprite.Group[Card] = pygame.sprite.Group()
         # จับเวลาเมื่อเริ่มเกม
         self.initial_display_time = 2000  # 2 วินาที
         self.start_time = pygame.time.get_ticks()
@@ -72,7 +75,7 @@ class MatchingGame:
         # จับเวลาเมื่อ card match
         self.match_display_time = 1000  # 1 วินาที
         self.match_time = []
-        self.matched_cards = []
+        self.matched_cards: pygame.sprite.Group[Card] = pygame.sprite.Group()
         self.create_cards()
 
     def create_cards(self):
@@ -85,20 +88,20 @@ class MatchingGame:
                 y = margin + i * (card_height + margin)
                 front_image = self.card_images[i * self.cols + j]
                 card = Card(front_image, self.back_image, x, y, card_width, card_height)
-                self.cards.append(card)
+                self.cards.add(card)
 
     def flip_back_cards(self):
         for card in self.selected_cards:
             if not card.is_matched:
                 card.flip()
-        self.selected_cards = []
+        self.selected_cards.empty()
 
     def flip_card(self, card):
         if not card.is_flipped and not card.is_matched:
             card.flip()
-            self.selected_cards.append(card)
+            self.selected_cards.add(card)
             # ถ้ามีการ์ดที่ถูกเลือก 2 ใบแล้ว และไม่มีการ์ดที่ match กันอยู่ เริ่มจับเวลา
-            if len(self.selected_cards) == 2 and not self.matched_cards:
+            if len(self.selected_cards) == 2 and len(self.matched_cards) == 0:
                 self.flip_time = pygame.time.get_ticks()
 
     def update(self):
@@ -112,36 +115,47 @@ class MatchingGame:
                     card.flip()
         
         # สำหรับแสดงผลการ์ดให้หมุน
-        for card in self.cards:
-            card.update()
+        self.cards.update()
 
         # จัดการการแสดงผลกับการ์ดที่ match กัน
-        if self.matched_cards:
+        if len(self.matched_cards) > 0:
             if current_time - self.match_time[0] > self.match_display_time:
-                for card in self.matched_cards[:2]:
+                # ทำการเปลี่ยนสถานะของการ์ดให้เป็น matched
+                for card in list(self.matched_cards)[:2]:
                     card.is_matched = True
+                    self.matched_cards.remove(card)
+                # ลบเวลาการ match ของการ์ดที่ได้ทำการจับคู่
                 self.match_time = self.match_time[1:]
-                self.matched_cards = self.matched_cards[2:] # นำการ์ด 2 ใบแรกออกไป
-                self.selected_cards = [card for card in self.selected_cards if not card.is_matched]
+                # สร้าง Group ชั่วคราวเพื่อเก็บการ์ดที่ไม่ถูก match
+                temp_selected_cards = pygame.sprite.Group()
+                for card in self.selected_cards:
+                    if not card.is_matched:
+                        temp_selected_cards.add(card)
+                # อัปเดตกลุ่มการ์ดที่ถูกเลือกด้วยการ์ดที่ไม่ถูก match
+                self.selected_cards = temp_selected_cards
 
-        # ถ้ามีการ์ดที่เปิดอยู่ 2 ใบและไม่ตรงกัน ให้พลิกกลับหลังจาก 1 วินาที
+        # ถ้ามีการ์ดที่เปิดอยู่มากกว่า 2 ใบและไม่ตรงกัน ให้พลิกกลับหลังจาก 1 วินาที
         if len(self.selected_cards) > 2:
-            cards_to_flip = self.selected_cards[:-2]  # เก็บการ์ดที่เกิน 2 ใบ
+            # เก็บการ์ดที่เกิน 2 ใบในกลุ่ม selected_cards
+            cards_to_flip = list(self.selected_cards)[:-2]
             for card in cards_to_flip:
                 if not card.is_matched:
                     card.flip()
-            self.selected_cards = self.selected_cards[-2:]  # เก็บเฉพาะ 2 ใบสุดท้าย
-        elif len(self.selected_cards) == 2 and not self.matched_cards:
+                    self.selected_cards.remove(card)
+        # ถ้ามีการ์ดที่เปิดอยู่ 2 ใบและไม่มีการ์ดที่ match กัน
+        elif len(self.selected_cards) == 2 and len(self.matched_cards) == 0:
+            # ถ้าเวลาผ่านไปมากกว่า 1 วินาที ให้พลิกการ์ดกลับ
             if current_time - self.flip_time > 1000:  # 1000 ms = 1 วินาที
                 self.flip_back_cards()
 
     def check_match(self):
         if len(self.selected_cards) == 2:
-            if self.selected_cards[0].front_image == self.selected_cards[1].front_image:
-                for card in self.selected_cards:
-                    self.matched_cards.append(card)
+            selected_cards_list = list(self.selected_cards)
+            if selected_cards_list[0].front_image == selected_cards_list[1].front_image:
+                for card in selected_cards_list:
+                    self.matched_cards.add(card)
                 self.match_time.append(pygame.time.get_ticks())
-                self.selected_cards = []
+                self.selected_cards.empty()
                 print("Match found!")
             else:
                 print("No match")
@@ -156,7 +170,7 @@ class MatchingGame:
     def is_game_over(self):
         return all(card.is_matched for card in self.cards)
 
-    def handle_events(self, event):
+    def handle_events(self, event: pygame.event.Event):
         if self.initial_display:
             return
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -165,7 +179,6 @@ class MatchingGame:
                     self.flip_card(card)
                     self.check_match()
                     break  # ออกจากลูปหลังจากพลิกการ์ดแล้ว
-
 # ฟังก์ชันหลักของเกม
 def main(pygame: pygame, 
          var: Variable, 
