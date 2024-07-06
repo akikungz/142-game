@@ -177,7 +177,7 @@ class Button(FontSystem):
                    x=1, y=1):
         self.button = pygame.Rect(x, y, width_button, height_button)
     
-    def click(self, event):
+    def click(self, event: pygame.event.Event):
         if event.type == pygame.MOUSEMOTION:
             if self.button.collidepoint(event.pos):
                 self.state = "hover"
@@ -367,7 +367,7 @@ class Dropdown(FontSystem):
                 text_rect = text_surface.get_rect(center=(rect.x+(width/2), rect.y+(height/2)))
                 screen_draw.blit(text_surface, text_rect)
 
-    def handle_event(self, event) -> bool:
+    def handle_event(self, event: pygame.event.Event) -> bool:
         if event.type == pygame.MOUSEMOTION and self.__active:
             for i, option in enumerate(self.__options):
                 rect = pygame.Rect(self.rect.x, self.rect.y + (i+1) * self.rect.height, self.rect.width, self.rect.height)
@@ -501,7 +501,7 @@ class ScrollableMenu:
             line_surface.set_alpha(alpha)
             screen_draw.blit(line_surface, (x, y + i))
 
-    def handle_event(self, event):
+    def handle_event(self, event: pygame.event.Event):
         if self.rect is None:
             return None
 

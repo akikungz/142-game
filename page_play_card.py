@@ -96,7 +96,7 @@ class MatchingGame:
                 card.flip()
         self.selected_cards.empty()
 
-    def flip_card(self, card):
+    def flip_card(self, card: Card):
         if not card.is_flipped and not card.is_matched:
             card.flip()
             self.selected_cards.add(card)
