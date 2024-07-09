@@ -132,4 +132,4 @@ class Variable():
         self.bg_gem.show(screen.window, (x-(gem_scale-(gem_scale//8))), (y - (height//2)), gem_scale, gem_scale)
 
     def set_start(self):
-        pass
+        self.all_sprites = pygame.sprite.Group()

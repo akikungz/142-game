@@ -37,3 +37,6 @@ c_bu = os.path.join(base_path, "Assets", "picture", "character",  "card", "c_bu.
 c_del = os.path.join(base_path, "Assets", "picture", "character",  "card", "c_del.png")
 c_mild = os.path.join(base_path, "Assets", "picture", "character",  "card", "c_mild.png")
 c_suru = os.path.join(base_path, "Assets", "picture", "character",  "card", "c_suru.png")
+# chibi
+def chibi_debirun_normal(action, key_frame):
+    return os.path.join(base_path, "Assets", "picture", "character",  "chibi", "debirun", "skins_normal", f"{action}", f"{key_frame}.png")

@@ -3,6 +3,7 @@ import pygame
 import framework as fw
 from variable import Variable
 import page_play_card
+import page_play_vsMons
 
 def main(page_play_run: bool, 
          pygame: pygame, 
@@ -22,7 +23,7 @@ def main(page_play_run: bool,
         elif var.btnPlayAns.click(event):
             pass
         elif var.btnPlayVsMons.click(event):
-            pass
+            page_play_vsMons.main(pygame, var, screen)
         elif var.btnBack.click(event):
             page_play_run = False
 
