@@ -48,8 +48,7 @@ class Player(pygame.sprite.Sprite):
         # กำหนดความสูงของตัวละคร
         self.__player_height = player_height
         # การกระทำจะมี idle, walk, action
-        # self.action = 'idle'
-        self.action = 'walk'
+        self.action = 'idle'
         # key frame ปัจจุบันของตัวละคร
         self.key_frame = 1
         self.image = pygame.image.load(get_image.chibi_debirun_normal(self.action, self.key_frame))
@@ -60,9 +59,9 @@ class Player(pygame.sprite.Sprite):
         # ค่าการเคลื่อนที่ของตัวละคร
         self.speed = 0
         # ทิศทางที่ผู้เล่นหันอยู่ในแกน x ปัจจุบัน
-        self.direction_x = 'L'
-        # ทิศทางที่ผู้เล่นหันอยู่ในแกน y ปัจจุบัน
-        self.direction_y = 'U'
+        self.side_player = 'L'
+        # ทิศทางที่ผู้เล่นจะเดินไป
+        self.direction = 'L'
         # ค่าเก็บข้อมูล sprite ของเวทย์
         self.magic_sprites = pygame.sprite.Group()
 
@@ -94,52 +93,48 @@ class Player(pygame.sprite.Sprite):
         # การควมคุมของผู้เล่น
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:  # ซ้าย
             self.speed = -self.__distance_speed
-            self.direction_x = 'L'
-            self.direction_y = None
+            self.side_player = 'L'
+            self.direction = 'L'
             self.set_action('walk')
         elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:  # ขวา
             self.speed = self.__distance_speed
-            self.direction_x = 'R'
-            self.direction_y = None
+            self.side_player = 'R'
+            self.direction = 'R'
             self.set_action('walk')
         elif keys[pygame.K_UP] or keys[pygame.K_w]:  # บน
             self.speed = -self.__distance_speed
-            self.direction_x = None
-            self.direction_y = 'U'
+            self.direction = 'U'
             self.set_action('walk')
         elif keys[pygame.K_DOWN] or keys[pygame.K_s]:  # ล่าง
             self.speed = self.__distance_speed
-            self.direction_x = None
-            self.direction_y = 'D'
+            self.direction = 'D'
             self.set_action('walk')
+        else:
+            self.set_action('idle')
         # ปุ่มที่กดครั้งเดียว
-        # ยิงเวทย์ 
-        if keys[pygame.K_SPACE]:
-            self.set_action('action')
-            self.use_magic(var)
-        # for event in events:
-        #     if event.type == pygame.KEYDOWN:
-        #         if event.key == pygame.K_SPACE:
-        #             # ยิงเวทย์ 
-        #             self.set_action('action')
-        #             self.use_magic(var)
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    # ยิงเวทย์ 
+                    self.set_action('action')
+                    self.use_magic(var)
 
     def movement(self):
         # ผู้เล่นจะเคลื่อนที่ในแนวแกน x ตามค่าความเร็ว
-        if self.direction_x == 'L' or self.direction_x == 'R':
+        if self.direction == 'L' or self.direction == 'R':
             self.rect.x += self.speed
         # ผู้เล่นจะเคลื่อนที่ในแนวแกน y ตามค่าความเร็ว
-        if self.direction_y == 'U' or self.direction_y == 'D':
+        if self.direction == 'U' or self.direction == 'D':
             self.rect.y += self.speed
         # ความเร็วของผู้เล่นจะลดลงค่า 1 ทุก ๆ ครั้ง
         self.speed += int(sign(self.speed) * -1)
 
     def use_magic(self, var: Variable):
-        if self.direction_x == 'L':
+        if self.side_player == 'L':
             rect = self.rect.left
-        if self.direction_x == 'R':
+        if self.side_player == 'R':
             rect = self.rect.right
-        magic = self.Magic_object(self.__screen , rect, self.rect.centery, self.direction_x, self.__distance_speed)
+        magic = self.Magic_object(self.__screen , rect, self.rect.centery, self.side_player, self.__distance_speed)
         self.magic_sprites.add(magic)
         var.all_sprites.add(magic)
 
@@ -179,7 +174,7 @@ class Player(pygame.sprite.Sprite):
         try:
             self.image = pygame.image.load(get_image.chibi_debirun_normal(self.action, self.key_frame))
             self.image = pygame.transform.scale(self.image, (self.__screen.width(self.__player_width), self.__screen.height(self.__player_height)))
-            if self.direction_x == "L":
+            if self.side_player == "L":
                 self.image = pygame.transform.flip(self.image, True, False)
             self.rect = self.image.get_rect(center=(centerx, centery))
         except:

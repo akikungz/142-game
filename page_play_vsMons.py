@@ -11,6 +11,7 @@ def main(pygame: pygame,
          var: Variable, 
          screen: fw.Screen):
     
+    var.set_start()
     player = character.Player(screen, 60, 80)
     var.all_sprites.add(player)
 
