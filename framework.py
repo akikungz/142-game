@@ -45,6 +45,14 @@ class Screen():
         hwnd = pygame.display.get_wm_info()['window']
         user32.SetWindowPos(hwnd, 0, x, y, 0, 0, 0x0001)
 
+    def true_position_x(self, scale: int):
+        # อนุญาตให้ตำแหน่งติดลบหรือเกินตำแหน่งสูงสุดได้
+        return ceil(self.x_axis * scale)
+
+    def true_position_y(self, scale: int):
+        # อนุญาตให้ตำแหน่งติดลบหรือเกินตำแหน่งสูงสุดได้
+        return ceil(self.y_axis * scale)
+
     def pack_x(self, box_x: int) -> int:
         return self.__resize2x(box_x)
     
