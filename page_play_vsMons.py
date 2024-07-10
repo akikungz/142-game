@@ -8,9 +8,11 @@ import random
 
 
 def high_x(screen: fw.Screen, picture: pygame.Surface):
-    min_width = screen.width(1)
     picture_width = picture.get_width()
-    return fw.ceil(picture_width // min_width)
+    picture_height = picture.get_height()
+    scale = picture_width / picture_height
+    scale = fw.ceil(scale * screen.MAX_Y)
+    return screen.true_position_x(scale)
 
 
 # ฟังก์ชันหลักของเกม

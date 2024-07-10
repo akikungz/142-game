@@ -66,13 +66,7 @@ class Player(pygame.sprite.Sprite):
         self.magic_sprites = pygame.sprite.Group()
 
     def calculate_distance_speed(self):
-        distance_speed = 1
-        while True:
-            distance_speed += 1
-            if (self.__screen.width(1)//distance_speed) <= 8:
-                break
-
-        return distance_speed
+        return self.__screen.width(3)
 
     def update(self, var: Variable, events):
         # ดึงค่า keyboard ที่กดอยู่ในปัจจุบัน
