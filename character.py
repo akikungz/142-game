@@ -53,15 +53,15 @@ class Player(pygame.sprite.Sprite):
         self.key_frame = 1
         self.image = pygame.image.load(get_image.chibi_debirun_normal(self.action, self.key_frame))
         self.image = pygame.transform.scale(self.image, (self.__screen.width(self.__player_width), self.__screen.height(self.__player_height)))
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(center=(self.__screen.pack_x(screen.MAX_X//2), self.__screen.pack_y(screen.MAX_Y//2)))
         # ใช้เพื่อ cooldown เวลาในการเปลี่ยนของแต่ละ frame
         self.__cooldown_frame = fw.TimeGame()
         # ค่าการเคลื่อนที่ของตัวละคร
         self.speed = 0
         # ทิศทางที่ผู้เล่นหันอยู่ในแกน x ปัจจุบัน
-        self.side_player = 'L'
+        self.side_player = 'R'
         # ทิศทางที่ผู้เล่นจะเดินไป
-        self.direction = 'L'
+        self.direction = 'R'
         # ค่าเก็บข้อมูล sprite ของเวทย์
         self.magic_sprites = pygame.sprite.Group()
 
