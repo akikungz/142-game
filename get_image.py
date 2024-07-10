@@ -29,6 +29,7 @@ banner_Xonebu = os.path.join(base_path, "Assets", "picture", "gacha",  "banner",
 # Assets Background
 bg_gem = os.path.join(base_path, "Assets", "picture", "background",  "gem.png")
 bg_text_area = os.path.join(base_path, "Assets", "picture", "background",  "text_area.png")
+bg_vsMons01 = os.path.join(base_path, "Assets", "picture", "background",  "bg_vsMons01.png")
 # card
 back_card = os.path.join(base_path, "Assets", "picture", "character",  "card", "back_card.png")
 c_ami = os.path.join(base_path, "Assets", "picture", "character",  "card", "c_ami.png")

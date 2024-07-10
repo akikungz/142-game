@@ -24,6 +24,7 @@ class Variable():
         # ภาพพื้นหลัง
         self.bg_gem = fw.ImageText('', 0, (0, 0, 0), get_image.bg_gem)
         self.bg_text_area = fw.ImageText('', 25, (0, 0, 0), get_image.bg_text_area)
+        self.bg_vsMons01 = pygame.image.load(get_image.bg_vsMons01)
         
         self.init_page_paly_variables()
         self.init_page_play_card_variables()

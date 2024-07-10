@@ -77,6 +77,34 @@ class Screen():
         self.SCREEN_HEIGHT = screen_info.current_h
 
 
+class Map(pygame.sprite.Sprite):
+    def __init__(self, texture: pygame.Surface, width: int, height: int):
+        super().__init__()
+        self.image = texture
+        self.width = width
+        self.height = height
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+        self.rect = self.image.get_rect(topleft=(0, 0))
+
+    def show(self, 
+             screen_draw: pygame.Surface, 
+             x: int, y: int,
+             width: int = None, 
+             height: int = None):
+        if width is not None:
+            self.width = width
+        if height is not None:
+            self.height = height
+        self.set_position(x, y)
+        
+        screen_draw.blit(self.image, self.rect)
+
+    def set_position(self, x: int, y: int):
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+        self.rect = self.image.get_rect(topleft=(x, y))
+        return self
+    
+
 class TimeGame:
     def __init__(self):
         self.__time_start = self.get_current_time()

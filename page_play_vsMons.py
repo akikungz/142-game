@@ -6,6 +6,13 @@ from variable import Variable
 import character
 import random
 
+
+def high_x(screen: fw.Screen, picture: pygame.Surface):
+    min_width = screen.width(1)
+    picture_width = picture.get_width()
+    return fw.ceil(picture_width // min_width)
+
+
 # ฟังก์ชันหลักของเกม
 def main(pygame: pygame, 
          var: Variable, 
@@ -13,6 +20,7 @@ def main(pygame: pygame,
     
     var.set_start()
     player = character.Player(screen, 60, 80)
+    map = fw.Map(var.bg_vsMons01, high_x(screen, var.bg_vsMons01), screen.height(screen.MAX_Y))
     var.all_sprites.add(player)
 
     running = True
@@ -29,7 +37,7 @@ def main(pygame: pygame,
             elif var.btnBack.click(event):
                 running = False
 
-        screen.window.fill(var.colors.WHITE)
+        map.show(screen.window, screen.pack_x(0), screen.pack_y(0))
         
         player.update(var, events)
         player.magic_sprites.update()
