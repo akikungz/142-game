@@ -10,6 +10,7 @@ class Variable():
         # ตัวแปรใช้ทั่วไป
         self.user_name = "admin"
         self.clock = pygame.time.Clock()
+        self.FPS = 30
         # Colors
         self.colors = colors.Colors()
         # ตัวแปรของเพลง

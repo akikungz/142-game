@@ -66,7 +66,8 @@ class Player(pygame.sprite.Sprite):
         self.magic_sprites = pygame.sprite.Group()
 
     def calculate_distance_speed(self):
-        return self.__screen.width(3)
+        distance_speed = self.__screen.width(3)
+        return distance_speed
 
     def update(self, var: Variable, events):
         # ดึงค่า keyboard ที่กดอยู่ในปัจจุบัน
@@ -105,6 +106,7 @@ class Player(pygame.sprite.Sprite):
             self.set_action('walk')
         else:
             self.set_action('idle')
+            self.speed = 0
         # ปุ่มที่กดครั้งเดียว
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -120,8 +122,6 @@ class Player(pygame.sprite.Sprite):
         # ผู้เล่นจะเคลื่อนที่ในแนวแกน y ตามค่าความเร็ว
         if self.direction == 'U' or self.direction == 'D':
             self.rect.y += self.speed
-        # ความเร็วของผู้เล่นจะลดลงค่า 1 ทุก ๆ ครั้ง
-        self.speed += int(sign(self.speed) * -1)
 
     def use_magic(self, var: Variable):
         if self.side_player == 'L':
@@ -174,34 +174,3 @@ class Player(pygame.sprite.Sprite):
         except:
             self.key_frame = 0
             self.picture_display()
-
-# # เอลฟ์สาว
-# class Narelle(Player):
-#     def __init__(self, screen, maps, player_width=1, player_height=2.5):
-#         super().__init__(screen, maps, player_width, player_height)
-
-#     def update(self, var, events):
-#         return super().update(var, events)
-    
-#     def picture_display(self):
-#         return super().picture_display()
-    
-def sign(x):
-    """
-    ฟังก์ชันนี้จะรับตัวเลข (x) และคืนค่าเครื่องหมายของตัวเลขนั้น
-
-    Args:
-        x: ตัวเลขที่ต้องการหาเครื่องหมาย
-
-    Returns:
-        1 ถ้า x เป็นบวก
-        0 ถ้า x เป็นศูนย์
-        -1 ถ้า x เป็นลบ
-    """
-
-    if x > 0:
-        return 1
-    elif x < 0:
-        return -1
-    else:
-        return 0

@@ -71,7 +71,7 @@ while running:
     var.btnSetting.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(520), screen.pack_y(10))
     var.btnExit.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(10))
     pygame.display.flip()
-    var.clock.tick(30)
+    var.clock.tick(var.FPS)
 
     while page_play_run:
         page_play_run = page_play.main(page_play_run, pygame, var, screen)
