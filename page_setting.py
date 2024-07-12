@@ -58,16 +58,16 @@ def main(page_setting_run: bool,
 
     # audio_music
     text_audio_music.show(screen.window, screen.pack_x(200), screen.pack_y(160))
-    var.btnReduce_1_music.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(270), screen.pack_y(160))
-    var.btnReduce_10_music.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(300), screen.pack_y(160))
+    var.btnReduce_1_music.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(300), screen.pack_y(160))
+    var.btnReduce_10_music.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(270), screen.pack_y(160))
     text_audio_music_volume.show(screen.window, screen.pack_x(360), screen.pack_y(160) ,center_mode=True)
     var.btnIncrease_1_music.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(390), screen.pack_y(160))
     var.btnIncrease_10_music.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(420), screen.pack_y(160))
     
     # audio_efx
     text_audio_efx.show(screen.window, screen.pack_x(200), screen.pack_y(190))
-    var.btnReduce_1_efx.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(270), screen.pack_y(190))
-    var.btnReduce_10_efx.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(300), screen.pack_y(190))
+    var.btnReduce_1_efx.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(300), screen.pack_y(190))
+    var.btnReduce_10_efx.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(270), screen.pack_y(190))
     text_audio_efx_volume.show(screen.window, screen.pack_x(360), screen.pack_y(190) ,center_mode=True)
     var.btnIncrease_1_efx.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(390), screen.pack_y(190))
     var.btnIncrease_10_efx.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(420), screen.pack_y(190))
