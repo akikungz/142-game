@@ -126,7 +126,7 @@ class Player(pygame.sprite.Sprite):
         # ผู้เล่นจะเคลื่อนที่ในแนวแกน y ตามค่าความเร็ว
         if self.direction == 'U' or self.direction == 'D':
             self.__player_y += self.speed
-            self.rect.x = self.__screen.pack_y(self.__player_y)
+            self.rect.y = self.__screen.pack_y(self.__player_y)
 
     def use_magic(self, var: Variable):
         if self.side_player == 'L':
