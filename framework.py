@@ -1,22 +1,43 @@
 import sys
 import os
 import ctypes
+from ctypes import wintypes
 import pygame
 from math import ceil
+import win32api
 
 
-class Screen():
+class Screen:
     def __init__(self, x: int, y: int):
         # กำหนดการแบ่งหน้าจอ
         self.MAX_X = x
         self.MAX_Y = y
+        self.monitors = self.get_monitors()
+        self.current_monitor = 0
         # ตั้งค่าให้เต็มจอเป็นค่าเริ่มต้น
         self.set_fullscreen_mode()
+
+    def get_monitors(self):
+        monitors = []
+        for i, monitor in enumerate(win32api.EnumDisplayMonitors()):
+            monitor_info = win32api.GetMonitorInfo(monitor[0])
+            monitors.append({
+                'index': i,
+                'handle': monitor[0],
+                'size': monitor_info['Monitor'],
+                'work_area': monitor_info['Work']
+            })
+        return monitors
 
     def set_fullscreen_mode(self):
         # ตั้งค่าโหมดการแสดงผลเป็นเต็มหน้าจอ
         self.window = pygame.display.set_mode((0, 0))
         pygame.display.toggle_fullscreen()
+        
+        # ตรวจสอบหน้าจอที่มีในปัจจุบัน
+        self.monitors = self.get_monitors()
+        # ตรวจสอบจอภาพปัจจุบัน
+        self.detect_current_monitor()
         # ตรวจจับความละเอียดหน้าจอปัจจุบัน
         self.__get_screen_info()
         # แบ่งหน้าจออกเป็น grid
@@ -25,25 +46,56 @@ class Screen():
     def set_screen(self, width: int, height: int):
         # ตั้งค่าโหมดการแสดงผลเป็นค่าที่กำหนด
         self.window = pygame.display.set_mode((width, height))
+        
+        # ตรวจสอบหน้าจอที่มีในปัจจุบัน
+        self.monitors = self.get_monitors()
+        # ตรวจสอบจอภาพปัจจุบัน
+        self.detect_current_monitor()
         # ตรวจจับความละเอียดหน้าจอปัจจุบัน
         self.__get_screen_info()
         # แบ่งหน้าจออกเป็น grid
         self.__set_axis()
+        # ตั้งให้หน้าต่างอยู่กลางหน้าจอ
         self.set2center_window()
 
     def set2center_window(self):
-        # ดึงข้อมูลของจอภาพ
-        user32 = ctypes.windll.user32
-        screen_width = user32.GetSystemMetrics(0)
-        screen_height = user32.GetSystemMetrics(1)
+        # ตรวจสอบว่ามีจอภาพหลายจอหรือไม่
+        if len(self.monitors) > 1:
+            # ถ้ามีหลายจอ ใช้จอภาพปัจจุบันที่กำหนดไว้
+            current_monitor = self.monitors[self.current_monitor]
+        else:
+            # ถ้ามีจอเดียว ใช้จอแรก
+            current_monitor = self.monitors[0]
 
-        # คำนวณตำแหน่งของหน้าต่างเพื่อให้อยู่ตรงกลาง
-        x = (screen_width - self.SCREEN_WIDTH) // 2
-        y = (screen_height - self.SCREEN_HEIGHT) // 2
-
+        # ดึงข้อมูลพื้นที่ทำงานของจอภาพปัจจุบัน
+        monitor_info = current_monitor['work_area']
+        
+        # คำนวณตำแหน่งของหน้าต่างเพื่อให้อยู่ตรงกลางของจอภาพปัจจุบัน
+        x = monitor_info[0] + (monitor_info[2] - monitor_info[0] - self.SCREEN_WIDTH) // 2
+        y = monitor_info[1] + (monitor_info[3] - monitor_info[1] - self.SCREEN_HEIGHT) // 2
+        
         # ตั้งค่าตำแหน่งของหน้าต่าง
         hwnd = pygame.display.get_wm_info()['window']
-        user32.SetWindowPos(hwnd, 0, x, y, 0, 0, 0x0001)
+        ctypes.windll.user32.SetWindowPos(hwnd, 0, x, y, 0, 0, 0x0001)
+
+    def detect_current_monitor(self):
+        # รับตำแหน่งของหน้าต่างปัจจุบัน
+        hwnd = pygame.display.get_wm_info()['window']
+        rect = wintypes.RECT()
+        ctypes.windll.user32.GetWindowRect(hwnd, ctypes.byref(rect))
+        window_x = rect.left
+        window_y = rect.top
+
+        # ตรวจสอบว่าหน้าต่างอยู่บนจอภาพใด
+        for i, monitor in enumerate(self.monitors):
+            monitor_info = monitor['work_area']
+            if (monitor_info[0] <= window_x < monitor_info[2] and
+                monitor_info[1] <= window_y < monitor_info[3]):
+                self.current_monitor = i
+                return
+
+        # ถ้าไม่พบจอภาพที่ตรงกัน ใช้จอภาพแรก
+        self.current_monitor = 0
 
     def true_position_x(self, scale: int):
         # อนุญาตให้ตำแหน่งติดลบหรือเกินตำแหน่งสูงสุดได้
@@ -55,24 +107,22 @@ class Screen():
 
     def pack_x(self, box_x: int) -> int:
         return self.__resize2x(box_x)
-    
+   
     def pack_y(self, box_y: int) -> int:
         return self.__resize2y(box_y)
-    
+   
     def width(self, scale: int) -> int:
         return self.__resize2x(scale)
-    
+   
     def height(self, scale: int) -> int:
         return self.__resize2y(scale)
-    
+   
     def __resize2x(self, scale: int):
-        scale = min(self.MAX_X, scale)
-        scale = max(scale, 0)
+        scale = min(self.MAX_X, max(scale, 0))
         return ceil(self.x_axis * scale)
-    
+   
     def __resize2y(self, scale: int):
-        scale = min(self.MAX_Y, scale)
-        scale = max(scale, 0)
+        scale = min(self.MAX_Y, max(scale, 0))
         return ceil(self.y_axis * scale)
 
     def __set_axis(self):
@@ -80,9 +130,8 @@ class Screen():
         self.y_axis = self.SCREEN_HEIGHT / self.MAX_Y
 
     def __get_screen_info(self):
-        screen_info = pygame.display.Info()
-        self.SCREEN_WIDTH = screen_info.current_w
-        self.SCREEN_HEIGHT = screen_info.current_h
+        self.SCREEN_WIDTH = self.window.get_width()
+        self.SCREEN_HEIGHT = self.window.get_height()
 
 
 class Map(pygame.sprite.Sprite):
