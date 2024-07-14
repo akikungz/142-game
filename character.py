@@ -122,11 +122,11 @@ class Player(pygame.sprite.Sprite):
         # ผู้เล่นจะเคลื่อนที่ในแนวแกน x ตามค่าความเร็ว
         if self.direction == 'L' or self.direction == 'R':
             self.__player_x += self.speed
-            self.rect.x = self.__screen.pack_x(self.__player_x)
+            self.rect.centerx = self.__screen.pack_x(self.__player_x)
         # ผู้เล่นจะเคลื่อนที่ในแนวแกน y ตามค่าความเร็ว
         if self.direction == 'U' or self.direction == 'D':
             self.__player_y += self.speed
-            self.rect.y = self.__screen.pack_y(self.__player_y)
+            self.rect.centery = self.__screen.pack_y(self.__player_y)
 
     def use_magic(self, var: Variable):
         if self.side_player == 'L':
@@ -139,10 +139,18 @@ class Player(pygame.sprite.Sprite):
 
     def check_map_collision(self):
         # ป้องกันผู้เล่นทะลุจอ ด้านขวา ด้านซ้าย ด้านบน ด้านล่าง
-        self.rect.right = min(self.rect.right, self.__screen.SCREEN_WIDTH)
-        self.rect.left = max(self.rect.left, 0)
-        self.rect.top = max(self.rect.top, 0)
-        self.rect.bottom = min(self.rect.bottom, self.__screen.SCREEN_HEIGHT)
+        if self.rect.left < 0:
+            self.__player_x += self.__distance_speed
+            self.rect.left = 0
+        elif self.rect.right > self.__screen.SCREEN_WIDTH:
+            self.__player_x += -self.__distance_speed
+            self.rect.right = self.__screen.SCREEN_WIDTH
+        elif self.rect.top < 0:
+            self.__player_y += self.__distance_speed
+            self.rect.top = 0
+        elif self.rect.bottom > self.__screen.SCREEN_HEIGHT:
+            self.__player_y += -self.__distance_speed
+            self.rect.bottom = self.__screen.SCREEN_HEIGHT
 
     def set_action(self, action_name):
         # การกระทำจะมี idle, walk, action
