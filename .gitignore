@@ -1,16 +1,36 @@
-# ไฟล์ cache
-__pycache__
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# ไฟล์สำหรับเทส code
-test.py
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
 
-# Assets Game
-icon.ico
-picture
-audio
+# testing
+/coverage
 
-# ไฟล์สำหรับ build game เป็น exe
-build game.bat
-dist
-build
-main.spec
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
