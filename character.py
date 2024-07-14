@@ -47,13 +47,16 @@ class Player(pygame.sprite.Sprite):
         self.__player_width = player_width
         # กำหนดความสูงของตัวละคร
         self.__player_height = player_height
+        # เก็บค่าตำแหน่งของตัวละคร
+        self.__player_x = fw.ceil(screen.MAX_X//2)
+        self.__player_y = fw.ceil(screen.MAX_Y//2)
         # การกระทำจะมี idle, walk, action
         self.action = 'idle'
         # key frame ปัจจุบันของตัวละคร
         self.key_frame = 1
         self.image = pygame.image.load(get_image.chibi_debirun_normal(self.action, self.key_frame))
         self.image = pygame.transform.scale(self.image, (self.__screen.width(self.__player_width), self.__screen.height(self.__player_height)))
-        self.rect = self.image.get_rect(center=(self.__screen.pack_x(screen.MAX_X//2), self.__screen.pack_y(screen.MAX_Y//2)))
+        self.rect = self.image.get_rect(center=(self.__screen.pack_x(self.__player_x), self.__screen.pack_y(self.__player_y)))
         # ใช้เพื่อ cooldown เวลาในการเปลี่ยนของแต่ละ frame
         self.__cooldown_frame = fw.TimeGame()
         # ค่าการเคลื่อนที่ของตัวละคร
@@ -66,7 +69,7 @@ class Player(pygame.sprite.Sprite):
         self.magic_sprites = pygame.sprite.Group()
 
     def calculate_distance_speed(self):
-        distance_speed = self.__screen.width(3)
+        distance_speed = 3
         return distance_speed
 
     def update(self, var: Variable, events):
@@ -118,10 +121,12 @@ class Player(pygame.sprite.Sprite):
     def movement(self):
         # ผู้เล่นจะเคลื่อนที่ในแนวแกน x ตามค่าความเร็ว
         if self.direction == 'L' or self.direction == 'R':
-            self.rect.x += self.speed
+            self.__player_x += self.speed
+            self.rect.x = self.__screen.pack_x(self.__player_x)
         # ผู้เล่นจะเคลื่อนที่ในแนวแกน y ตามค่าความเร็ว
         if self.direction == 'U' or self.direction == 'D':
-            self.rect.y += self.speed
+            self.__player_y += self.speed
+            self.rect.x = self.__screen.pack_y(self.__player_y)
 
     def use_magic(self, var: Variable):
         if self.side_player == 'L':
