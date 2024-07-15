@@ -23,7 +23,9 @@ export default function Home() {
             <span className="text-lg mr-4">999,999</span>
           </div>
 
-          <Image src={BtnSetting} alt="logo" width={64} />
+          <Link href="/setting">
+            <Image src={BtnSetting} alt="logo" width={64} />
+          </Link>
         </div>
       </div>
 
