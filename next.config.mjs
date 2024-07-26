@@ -7,8 +7,7 @@ const nextConfig = {
     },
     experimental: {
         missingSuspenseWithCSRBailout: false,
-    },
-    basePath: '/142-game'
+    }
 };
 
 export default nextConfig;
